@@ -34,7 +34,9 @@ A comprehensive guide to using the club communications web application.
 #### Method 2: CSV Import
 1. Click "Import CSV" button
 2. Select your CSV file (must have Name and Email columns)
-3. Data will be imported automatically
+3. If you have existing contacts, you'll be asked to confirm replacement
+4. If your contact list is empty, import proceeds automatically
+5. Data will be imported cleanly without unwanted blank rows
 
 #### Method 3: Template Download
 1. Click "Download CSV Template"
@@ -69,10 +71,10 @@ A comprehensive guide to using the club communications web application.
    - **New Member Welcome (Email Outreach)**: For people who provided email directly
    - **Club Fair Follow-up**: For people you met at club fairs
 
-#### Step 2: Customize the Template
-1. The template loads into the message area
-2. Replace placeholders like `[Discord Link]` with your actual links
-3. Update meeting schedules and other club-specific information
+#### Step 2: Template Auto-Configuration
+1. The template loads into the message area with all club links automatically filled in
+2. All placeholders like `[Discord Link]`, `[Web Form Link]`, `[Website URL]`, and `[Meeting Info]` are replaced with current club resources
+3. No manual link replacement needed - everything is configured automatically
 
 #### Step 3: Generate Messages
 1. Click "Generate Messages"
@@ -90,7 +92,7 @@ A comprehensive guide to using the club communications web application.
 #### Template Tips
 - Keep messages professional but friendly
 - Include clear next steps for recipients
-- Add relevant links and contact information
+- All club links are automatically included and up-to-date
 - Test with a few contacts before sending to everyone
 
 ## ✅ Tracking Sent Messages
@@ -133,7 +135,8 @@ A comprehensive guide to using the club communications web application.
 
 ### CSV Export/Import
 - **Export CSV**: Downloads your contact list as a CSV file
-- **Import CSV**: Loads contacts from a CSV file
+- **Smart Import**: Only asks for confirmation when there are existing contacts to replace
+- **Clean Import**: No unwanted blank rows after successful imports
 - **Template Download**: Gets a properly formatted CSV template
 
 ### Data Safety Features
@@ -184,6 +187,7 @@ A comprehensive guide to using the club communications web application.
 - **Issue**: "Invalid CSV format" error
 - **Solution**: Make sure your CSV has "Name" and "Email" headers
 - **Check**: Ensure email addresses are valid
+- **Note**: Import now works smoothly with empty contact lists
 
 #### Message Generation Issues
 - **Issue**: No messages generated

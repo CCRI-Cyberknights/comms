@@ -47,6 +47,17 @@ index.html (single file containing):
 }
 ```
 
+### Club Configuration
+```javascript
+{
+    discord: string,           // Discord server invite link
+    membershipForm: string,    // Membership form URL
+    website: string,           // Club website URL
+    meetingSchedule: string,   // Meeting calendar URL
+    meetingFrequency: string   // Meeting frequency (e.g., "weekly")
+}
+```
+
 ## 🔌 JavaScript API
 
 ### Global Variables
@@ -115,16 +126,24 @@ index.html (single file containing):
 - **Parameters**: 
   - `event` (Event): File input change event
 - **Returns**: `void`
-- **Description**: Processes uploaded CSV file and imports contacts
+- **Description**: Processes uploaded CSV file and imports contacts with smart confirmation
 - **Usage**: Called when file is selected for import
+- **Features**: Only asks for confirmation when there are existing contacts to replace
 
 ### Template Functions
 
 #### `loadTemplate()`
 - **Parameters**: None
 - **Returns**: `void`
-- **Description**: Loads selected template into message textarea
+- **Description**: Loads selected template into message textarea with automatic link replacement
 - **Usage**: Called when template dropdown selection changes
+
+#### `replaceTemplatePlaceholders(template)`
+- **Parameters**: 
+  - `template` (string): Template content with placeholders
+- **Returns**: `string`
+- **Description**: Replaces template placeholders with actual club configuration values
+- **Usage**: Called internally by loadTemplate() function
 
 #### `generateMessages()`
 - **Parameters**: None
@@ -194,8 +213,20 @@ index.html (single file containing):
 #### `clearAll()`
 - **Parameters**: None
 - **Returns**: `void`
-- **Description**: Clears all contacts and resets application state
+- **Description**: Clears all contacts and resets application state with confirmation
 - **Usage**: Called when user clicks "Clear All"
+
+#### `clearAllSilently()`
+- **Parameters**: None
+- **Returns**: `void`
+- **Description**: Clears all contacts without confirmation dialog
+- **Usage**: Internal function for import process
+
+#### `clearAllForImport()`
+- **Parameters**: None
+- **Returns**: `void`
+- **Description**: Clears all contacts for import without adding empty row
+- **Usage**: Internal function for clean CSV import process
 
 ## 🎨 CSS Architecture
 
@@ -361,4 +392,4 @@ open http://localhost:8000
 
 ---
 
-*This API documentation is maintained by the CCRI Cyberknights development team. Last updated: January 2025*
+*This API documentation is maintained by the CCRI Cyberknights development team. Last updated: 2025*

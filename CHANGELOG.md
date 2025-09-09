@@ -16,7 +16,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bulk message operations
 - Template versioning system
 
-## [2.1.0] - 2025-01-09
+## [2.2.0] - 2025
+
+### Added
+- **Centralized Configuration**: Single `clubConfig` object for all club links and resources
+- **Automatic Link Replacement**: Templates automatically use current club resources
+- **Smart CSV Import**: Intelligent import that only asks for confirmation when needed
+- **Clean Import Process**: No unwanted blank rows after successful imports
+- **Modern Header Design**: Larger, more prominent logo with improved styling
+- **Enhanced Logo Styling**: Better shadows, hover effects, and responsive design
+
+### Changed
+- **Template System**: All templates now use centralized configuration for links
+- **Import Behavior**: CSV import only shows confirmation dialog when there are existing contacts
+- **Header Layout**: Logo repositioned below title text for better visual hierarchy
+- **Visual Design**: Removed shield emoji for cleaner, modern appearance
+- **Logo Size**: Increased from 120px to 200px (160px on mobile) for better prominence
+
+### Fixed
+- **CSV Import UX**: No more unnecessary confirmation dialogs for empty contact lists
+- **Import Cleanliness**: Eliminated blank rows appearing at top after successful imports
+- **Template Maintenance**: Links now update automatically across all templates
+- **Visual Consistency**: Removed outdated shield elements from header and footer
+
+### Technical
+- **New Functions**: Added `clearAllForImport()`, `clearAllSilently()`, and `replaceTemplatePlaceholders()`
+- **Configuration Management**: Centralized club resource management in `clubConfig` object
+- **Import Logic**: Enhanced import process with smart detection of existing contacts
+- **Template Processing**: Automatic placeholder replacement with current club resources
+
+## [2.1.0] - 2025
 
 ### Added
 - **Message Tracking System**: Checkbox system for tracking sent messages
@@ -55,7 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Input Sanitization**: Enhanced XSS prevention
 - **Data Privacy**: All data remains local, no external transmission
 
-## [2.0.0] - 2025-01-09
+## [2.0.0] - 2025
 
 ### Added
 - Complete redesign with spreadsheet-style interface
@@ -93,7 +122,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Better sanitization of user input
 - Enhanced privacy with local-only data storage
 
-## [1.0.0] - 2025-01-09
+## [1.0.0] - 2025
 
 ### Added
 - Initial release of the communications web application
@@ -123,7 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Pages hosting
 - MIT License
 
-## [0.1.0] - 2025-01-09
+## [0.1.0] - 2025
 
 ### Added
 - Initial repository setup
@@ -177,6 +206,12 @@ When contributing to the project:
 - **Storage**: Browser storage functionality removed
 - **Protection**: New page leave protection added
 
+### From v2.1.0 to v2.2.0
+- **Configuration**: New centralized club configuration system
+- **Templates**: Automatic link replacement in all templates
+- **Import**: Improved CSV import with smart confirmation
+- **Design**: Modern header with larger logo and cleaner styling
+
 ---
 
-*This changelog is maintained by the CCRI Cyberknights team. Last updated: January 2025*
+*This changelog is maintained by the CCRI Cyberknights team. Last updated: 2025*

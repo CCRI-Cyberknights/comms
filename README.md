@@ -1,4 +1,4 @@
-# 🛡️ CCRI Cyberknights Communications
+# CCRI Cyberknights Communications
 
 A modern, spreadsheet-style web application for standardizing club communications and streamlining the onboarding process for new members.
 
@@ -24,6 +24,8 @@ This repository serves as a central hub for all official club messaging, from in
   - New Member Welcome (Web Form)
   - New Member Welcome (Email Outreach)
   - Club Fair Follow-up
+- **Centralized Configuration**: All club links managed in one place for easy updates
+- **Automatic Link Replacement**: Templates automatically use current club resources
 - **Custom Templates**: Write your own messages with placeholder support
 - **Bulk Generation**: Create personalized messages for all contacts at once
 - **One Message Per Row**: Full-width display for maximum readability
@@ -37,12 +39,16 @@ This repository serves as a central hub for all official club messaging, from in
 - **Session Persistence**: Tracking state maintained until page refresh
 
 ### 💾 Data Management
-- **CSV Import/Export**: Seamless data transfer with proper parsing
+- **Smart CSV Import**: Intelligent import that only asks for confirmation when needed
+- **Clean Import Process**: No unwanted blank rows after successful imports
+- **CSV Export**: Seamless data transfer with proper parsing
 - **Template Downloads**: Pre-formatted CSV templates for easy setup
 - **Data Validation**: Email validation and duplicate prevention
 - **Page Leave Protection**: Warns users before losing unsaved data
 
 ### 🎨 Modern Interface
+- **Prominent Logo**: Large, centered logo with modern styling and hover effects
+- **Clean Design**: Minimalist header without outdated elements
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile
 - **Professional Styling**: Clean, modern interface with smooth animations
 - **User Feedback**: Success/error alerts for all actions
@@ -123,8 +129,8 @@ comms/
 
 #### Using Pre-built Templates
 1. Select a template from the dropdown menu
-2. The template will load into the message area
-3. Customize placeholders like `[Discord Link]` with your actual links
+2. The template will load into the message area with actual club links automatically filled in
+3. All placeholders like `[Discord Link]`, `[Web Form Link]`, etc. are replaced with current club resources
 4. Click "Generate Messages" to create personalized versions
 
 #### Creating Custom Templates
@@ -226,7 +232,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔄 Version History
 
-### v2.1.0 (Current)
+### v2.2.0 (Current)
+- **Centralized Configuration**: All club links managed in single `clubConfig` object
+- **Smart CSV Import**: Only asks for confirmation when there are actual contacts to clear
+- **Clean Import Process**: Removed unwanted blank rows after successful imports
+- **Modern Header Design**: Larger logo, removed shield emoji, improved spacing
+- **Automatic Link Replacement**: Templates automatically use current club resources
+- **Enhanced UX**: Better import flow and visual design improvements
+
+### v2.1.0
 - Added message tracking system with checkboxes
 - Implemented one message per row layout for better readability
 - Added page leave protection for unsaved data
@@ -252,4 +266,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ for the CCRI Cyberknights**
 
-*Last updated: January 2025*
+*Last updated: 2025*
