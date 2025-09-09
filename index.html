@@ -304,6 +304,93 @@
             }
         }
 
+        /* Footer Styles */
+        .footer {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        .footer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .footer-version {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .footer-copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .footer-social a {
+            color: white;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -317,6 +404,19 @@
             .stats {
                 flex-direction: column;
                 gap: 10px;
+            }
+
+            .footer-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                gap: 20px;
+            }
+
+            .footer-links a {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -861,5 +961,37 @@ The CCRI Cyberknights Leadership Team`
         // Start the application
         init();
     </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <div class="footer-brand">
+                    <span>🛡️</span>
+                    <h3>CCRI Cyberknights</h3>
+                </div>
+                <div class="footer-version">v2.0.0</div>
+            </div>
+            
+            <div class="footer-links">
+                <a href="https://github.com/CCRI-Cyberknights/comms" target="_blank">GitHub Repository</a>
+                <a href="https://github.com/CCRI-Cyberknights/comms/blob/main/README.md" target="_blank">Documentation</a>
+                <a href="https://github.com/CCRI-Cyberknights/comms/blob/main/USER_GUIDE.md" target="_blank">User Guide</a>
+                <a href="https://github.com/CCRI-Cyberknights/comms/blob/main/SECURITY.md" target="_blank">Security</a>
+                <a href="https://github.com/CCRI-Cyberknights/comms/issues" target="_blank">Report Issue</a>
+            </div>
+            
+            <div class="footer-social">
+                <a href="https://github.com/CCRI-Cyberknights" target="_blank" title="GitHub">📱</a>
+                <a href="#" onclick="showAlert('Discord link available to club members', 'success')" title="Discord">💬</a>
+                <a href="mailto:cyberknights@ccri.edu" title="Email">📧</a>
+            </div>
+            
+            <p class="footer-copyright">
+                © 2025 CCRI Cyberknights. All rights reserved. | 
+                Built with ❤️ for the cybersecurity community
+            </p>
+        </div>
+    </footer>
 </body>
 </html>
