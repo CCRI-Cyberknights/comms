@@ -50,55 +50,35 @@
             box-shadow: 0 16px 45px rgba(0,0,0,0.35);
         }
 
-        /* Email Auto-completion Styles */
-        .email-suggestions {
-            position: absolute;
-            background: #fff !important;
-            color: #000 !important;
-            border: 1px solid #ccc !important;
-            border-radius: 4px !important;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-            z-index: 10000 !important;
-            max-height: 150px;
-            overflow-y: auto;
-            min-width: 200px;
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
-
-        .suggestion-item {
-            padding: 8px 12px;
-            cursor: pointer;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 14px;
-            transition: background-color 0.2s ease;
-            color: #000 !important;
-        }
-
-        .suggestion-item:hover {
-            background-color: #f0f0f0 !important;
-        }
-
-        .suggestion-item:last-child {
-            border-bottom: none;
-        }
-
-        .suggestion-typed {
-            color: #000 !important;
-            font-weight: 500;
-        }
-
-        .suggestion-remaining {
-            color: #888 !important;
-            font-weight: 400;
-        }
-
+        /* Email Auto-completion Styles - Inline Text Completion */
         .email-input-container {
             position: relative;
             overflow: visible !important;
         }
         
+        .email-input {
+            background: transparent !important;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .email-suggestion-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+            color: #888;
+            font-size: inherit;
+            font-family: inherit;
+            padding: inherit;
+            border: none;
+            background: transparent;
+            white-space: pre;
+        }
+
         /* Fix table cell overflow issues */
         td {
             overflow: visible !important;
@@ -899,169 +879,71 @@
         }
 
         function showSuggestions(input, matches, typedPart) {
-            console.log(`🎨 SHOWING SUGGESTIONS for "${typedPart}":`, matches);
+            console.log(`🎨 SHOWING INLINE SUGGESTION for "${typedPart}":`, matches);
             console.log(`📧 Input element:`, input);
             
             // Remove existing suggestions
             hideSuggestions();
             
-            const container = input.closest('.email-input-container');
-            console.log(`📦 Container found:`, container);
-            
-            if (!container) {
-                console.log('❌ No container found for suggestions!');
+            if (matches.length === 0) {
+                console.log('❌ No matches found');
                 return;
             }
             
-            const suggestionsBox = document.createElement('div');
-            suggestionsBox.className = 'email-suggestions';
-            suggestionsBox.id = 'email-suggestions';
-            console.log(`📝 Created suggestions box:`, suggestionsBox);
+            // Get the first (best) match
+            const bestMatch = matches[0];
+            const remainingText = bestMatch.substring(typedPart.length);
             
-            matches.forEach(domain => {
-                const suggestionItem = document.createElement('div');
-                suggestionItem.className = 'suggestion-item';
+            console.log(`🎯 Best match: "${bestMatch}", remaining: "${remainingText}"`);
+            
+            // Create overlay element for the grey suggestion text
+            const overlay = document.createElement('input');
+            overlay.className = 'email-suggestion-overlay';
+            overlay.value = input.value + remainingText;
+            overlay.readOnly = true;
+            overlay.id = 'email-suggestion-overlay';
+            
+            // Add overlay to the same container as the input
+            const container = input.closest('.email-input-container');
+            if (container) {
+                container.appendChild(overlay);
+                console.log(`✅ Added suggestion overlay to container`);
                 
-                const typedSpan = document.createElement('span');
-                typedSpan.className = 'suggestion-typed';
-                typedSpan.textContent = typedPart;
+                // Position overlay exactly over the input
+                const inputRect = input.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                overlay.style.top = (inputRect.top - containerRect.top) + 'px';
+                overlay.style.left = (inputRect.left - containerRect.left) + 'px';
+                overlay.style.width = inputRect.width + 'px';
+                overlay.style.height = inputRect.height + 'px';
                 
-                const remainingSpan = document.createElement('span');
-                remainingSpan.className = 'suggestion-remaining';
-                remainingSpan.textContent = domain.substring(typedPart.length);
-                
-                suggestionItem.appendChild(typedSpan);
-                suggestionItem.appendChild(remainingSpan);
-                
-                suggestionItem.addEventListener('click', function() {
-                    const atIndex = input.value.lastIndexOf('@');
-                    const beforeAt = input.value.substring(0, atIndex);
-                    input.value = beforeAt + domain;
-                    hideSuggestions();
-                    input.focus();
-                });
-                
-                suggestionsBox.appendChild(suggestionItem);
-            });
-            
-            // ALWAYS append to document.body to escape table constraints
-            document.body.appendChild(suggestionsBox);
-            console.log(`✅ Added suggestions box to document.body`);
-            
-            // Get accurate position using getBoundingClientRect
-            const rect = input.getBoundingClientRect();
-            suggestionsBox.style.position = 'absolute';
-            suggestionsBox.style.top = (rect.bottom + window.pageYOffset) + 'px';
-            suggestionsBox.style.left = (rect.left + window.pageXOffset) + 'px';
-            suggestionsBox.style.width = rect.width + 'px'; // Match input width
-            suggestionsBox.style.zIndex = '10000';
-            
-            console.log(`📍 Positioned suggestions at top: ${suggestionsBox.style.top}, left: ${suggestionsBox.style.left}, width: ${suggestionsBox.style.width}`);
-            
-            // Enhanced debugging - comprehensive style analysis
-            console.log(`🔍 SUGGESTIONS BOX COMPUTED STYLES:`, {
-                display: window.getComputedStyle(suggestionsBox).display,
-                visibility: window.getComputedStyle(suggestionsBox).visibility,
-                opacity: window.getComputedStyle(suggestionsBox).opacity,
-                zIndex: window.getComputedStyle(suggestionsBox).zIndex,
-                position: window.getComputedStyle(suggestionsBox).position,
-                top: window.getComputedStyle(suggestionsBox).top,
-                left: window.getComputedStyle(suggestionsBox).left,
-                width: window.getComputedStyle(suggestionsBox).width,
-                height: window.getComputedStyle(suggestionsBox).height
-            });
-            
-            // Debug container and parent styles
-            console.log(`🔍 CONTAINER COMPUTED STYLES:`, {
-                overflow: window.getComputedStyle(container).overflow,
-                overflowX: window.getComputedStyle(container).overflowX,
-                overflowY: window.getComputedStyle(container).overflowY,
-                position: window.getComputedStyle(container).position,
-                zIndex: window.getComputedStyle(container).zIndex
-            });
-            
-            // Debug table cell (td) styles
-            const td = input.closest('td');
-            if (td) {
-                console.log(`🔍 TABLE CELL (TD) COMPUTED STYLES:`, {
-                    overflow: window.getComputedStyle(td).overflow,
-                    overflowX: window.getComputedStyle(td).overflowX,
-                    overflowY: window.getComputedStyle(td).overflowY,
-                    position: window.getComputedStyle(td).position,
-                    zIndex: window.getComputedStyle(td).zIndex
-                });
+                console.log(`📍 Positioned overlay at top: ${overlay.style.top}, left: ${overlay.style.left}`);
+            } else {
+                console.log('❌ No container found for overlay');
             }
             
-            // Debug table row (tr) styles
-            const tr = input.closest('tr');
-            if (tr) {
-                console.log(`🔍 TABLE ROW (TR) COMPUTED STYLES:`, {
-                    overflow: window.getComputedStyle(tr).overflow,
-                    overflowX: window.getComputedStyle(tr).overflowX,
-                    overflowY: window.getComputedStyle(tr).overflowY,
-                    position: window.getComputedStyle(tr).position,
-                    zIndex: window.getComputedStyle(tr).zIndex
-                });
-            }
-            
-            // Force visibility with maximum specificity
-            suggestionsBox.style.display = 'block !important';
-            suggestionsBox.style.visibility = 'visible !important';
-            suggestionsBox.style.opacity = '1 !important';
-            suggestionsBox.style.zIndex = '10000 !important';
-            suggestionsBox.style.position = 'absolute !important';
-            console.log(`🔧 FORCED VISIBILITY - All styles set with !important`);
-            
-            // Fallback: If still not visible, try position: fixed
-            setTimeout(() => {
-                const computedStyle = window.getComputedStyle(suggestionsBox);
-                if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden' || computedStyle.opacity === '0') {
-                    console.log(`🔄 Suggestions still not visible, trying position: fixed`);
-                    suggestionsBox.style.position = 'fixed';
-                    suggestionsBox.style.top = rect.bottom + 'px';
-                    suggestionsBox.style.left = rect.left + 'px';
-                    console.log(`📍 Switched to fixed positioning at top: ${suggestionsBox.style.top}, left: ${suggestionsBox.style.left}`);
-                }
-            }, 50);
         }
 
         function hideSuggestions() {
-            const existingSuggestions = document.getElementById('email-suggestions');
-            if (existingSuggestions) {
-                existingSuggestions.remove();
+            const existingOverlay = document.getElementById('email-suggestion-overlay');
+            if (existingOverlay) {
+                existingOverlay.remove();
+                console.log('👋 Removed suggestion overlay');
             }
         }
 
         function handleEmailKeydown(event) {
-            const suggestions = document.getElementById('email-suggestions');
-            if (!suggestions) return;
-            
-            const items = suggestions.querySelectorAll('.suggestion-item');
-            if (items.length === 0) return;
-            
-            let currentIndex = -1;
-            items.forEach((item, index) => {
-                if (item.classList.contains('highlighted')) {
-                    currentIndex = index;
-                }
-            });
+            const overlay = document.getElementById('email-suggestion-overlay');
+            if (!overlay) return;
             
             switch (event.key) {
-                case 'ArrowDown':
-                    event.preventDefault();
-                    currentIndex = Math.min(currentIndex + 1, items.length - 1);
-                    highlightSuggestion(items, currentIndex);
-                    break;
-                case 'ArrowUp':
-                    event.preventDefault();
-                    currentIndex = Math.max(currentIndex - 1, 0);
-                    highlightSuggestion(items, currentIndex);
-                    break;
+                case 'Tab':
                 case 'Enter':
                     event.preventDefault();
-                    if (currentIndex >= 0) {
-                        items[currentIndex].click();
-                    }
+                    // Accept the suggestion
+                    const input = event.target;
+                    input.value = overlay.value;
+                    hideSuggestions();
                     break;
                 case 'Escape':
                     hideSuggestions();
@@ -1069,17 +951,6 @@
             }
         }
 
-        function highlightSuggestion(items, index) {
-            items.forEach((item, i) => {
-                if (i === index) {
-                    item.classList.add('highlighted');
-                    item.style.backgroundColor = '#e2e8f0';
-                } else {
-                    item.classList.remove('highlighted');
-                    item.style.backgroundColor = '';
-                }
-            });
-        }
 
         // Page leave warning functionality
         function hasUnsavedData() {
@@ -1674,7 +1545,7 @@ The CCRI Cyberknights Leadership Team`
                 <div class="footer-brand">
                     <h3>CCRI Cyberknights</h3>
                 </div>
-                <div class="footer-version">v2.1.5</div>
+                <div class="footer-version">v2.1.6</div>
             </div>
             
             <div class="footer-links">
