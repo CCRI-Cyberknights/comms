@@ -17,16 +17,16 @@ The CCRI Cyberknights is a student organization focused on cybersecurity educati
 
 ## Get Involved
 
-1. **Join our Discord**: https://discord.com/channels/1159622463647387719/1159622463647387722
-2. **Fill out our membership form**: https://forms.cloud.microsoft/r/U26WUVJGgp
-3. **Attend our next meeting**: Check our calendar at https://ccri-cyberknights.github.io/page/#/calendar
+1. **Join our Discord**: [Discord Link]
+2. **Fill out our membership form**: [Web Form Link]
+3. **Attend our next meeting**: Check our calendar at [Meeting Info]
 
 ## Important Links
 
-- **Discord Server**: https://discord.com/channels/1159622463647387719/1159622463647387722
-- **Membership Form**: https://forms.cloud.microsoft/r/U26WUVJGgp
-- **Club Website**: https://www.ccri.edu/comp/cybersecurity/studentclub.html
-- **Meeting Schedule**: https://ccri-cyberknights.github.io/page/#/calendar
+- **Discord Server**: [Discord Link]
+- **Membership Form**: [Web Form Link]
+- **Club Website**: [Website URL]
+- **Meeting Schedule**: [Meeting Info]
 
 ## Questions?
 
@@ -39,5 +39,6 @@ The CCRI Cyberknights Leadership Team
 
 **Template Usage Notes:**
 - Replace `{{name}}` with the person's name
+- Placeholders like `[Discord Link]`, `[Web Form Link]`, `[Website URL]`, `[Meeting Info]` are automatically replaced with actual values from the centralized configuration in `index.html`
+- To update links, modify the `clubConfig` object in the JavaScript section of `index.html`
 - This template is for people you met at club fairs or recruitment events
-- All links are now updated with actual club resources

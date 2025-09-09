@@ -710,6 +710,25 @@
         let currentTemplate = '';
         let sentMessages = new Set(); // Track which messages have been sent
 
+        // Club configuration - single source of truth for all links
+        const clubConfig = {
+            discord: 'https://discord.com/channels/1159622463647387719/1159622463647387722',
+            membershipForm: 'https://forms.cloud.microsoft/r/U26WUVJGgp',
+            website: 'https://www.ccri.edu/comp/cybersecurity/studentclub.html',
+            meetingSchedule: 'https://ccri-cyberknights.github.io/page/#/calendar',
+            meetingFrequency: 'weekly'
+        };
+
+        // Function to replace placeholders in templates with actual values
+        function replaceTemplatePlaceholders(template) {
+            return template
+                .replace(/\[Discord Link\]/g, clubConfig.discord)
+                .replace(/\[Web Form Link\]/g, clubConfig.membershipForm)
+                .replace(/\[Website URL\]/g, clubConfig.website)
+                .replace(/\[Meeting Info\]/g, clubConfig.meetingSchedule)
+                .replace(/\[schedule\]/g, clubConfig.meetingFrequency);
+        }
+
         // Page leave warning functionality
         function hasUnsavedData() {
             // Check if there are any contacts with data
@@ -736,7 +755,7 @@ Welcome to the CCRI Cyberknights! We're excited to have you join our cybersecuri
 
 ## Next Steps
 
-1. **Join our Discord server**: https://discord.com/channels/1159622463647387719/1159622463647387722
+1. **Join our Discord server**: [Discord Link]
    - This is where we coordinate meetings, share resources, and chat about cybersecurity topics
    - Please introduce yourself in the #introductions channel
 
@@ -746,9 +765,9 @@ Welcome to the CCRI Cyberknights! We're excited to have you join our cybersecuri
 
 ## Important Links
 
-- **Discord Server**: https://discord.com/channels/1159622463647387719/1159622463647387722
-- **Club Website**: https://www.ccri.edu/comp/cybersecurity/studentclub.html
-- **Meeting Schedule**: https://ccri-cyberknights.github.io/page/#/calendar
+- **Discord Server**: [Discord Link]
+- **Club Website**: [Website URL]
+- **Meeting Schedule**: [Meeting Info]
 
 If you have any questions, don't hesitate to reach out to any of our officers or post in Discord.
 
@@ -768,27 +787,27 @@ Thank you for your interest in the CCRI Cyberknights! We're excited to have you 
 Since you provided your email directly, here are two ways to get involved:
 
 ### Option 1: Join our Discord (Recommended)
-- **Discord Server**: https://discord.com/channels/1159622463647387719/1159622463647387722
+- **Discord Server**: [Discord Link]
 - This is our primary communication hub for meetings, resources, and discussions
 - Please introduce yourself in the #introductions channel
 
 ### Option 2: Fill out our official membership form
-- **Web Form**: https://forms.cloud.microsoft/r/U26WUVJGgp
+- **Web Form**: [Web Form Link]
 - This helps us keep track of all members and send important updates
 
 ## What to Expect
 
-- **Regular meetings**: We meet weekly to discuss cybersecurity topics, practice skills, and plan activities
+- **Regular meetings**: We meet [schedule] to discuss cybersecurity topics, practice skills, and plan activities
 - **Hands-on learning**: CTF competitions, workshops, and guest speakers
 - **Networking**: Connect with fellow cybersecurity enthusiasts and industry professionals
 - **Resources**: Access to study materials, tools, and career guidance
 
 ## Important Links
 
-- **Discord Server**: https://discord.com/channels/1159622463647387719/1159622463647387722
-- **Membership Form**: https://forms.cloud.microsoft/r/U26WUVJGgp
-- **Club Website**: https://www.ccri.edu/comp/cybersecurity/studentclub.html
-- **Meeting Schedule**: https://ccri-cyberknights.github.io/page/#/calendar
+- **Discord Server**: [Discord Link]
+- **Membership Form**: [Web Form Link]
+- **Club Website**: [Website URL]
+- **Meeting Schedule**: [Meeting Info]
 
 ## Questions?
 
@@ -816,16 +835,16 @@ The CCRI Cyberknights is a student organization focused on cybersecurity educati
 
 ## Get Involved
 
-1. **Join our Discord**: https://discord.com/channels/1159622463647387719/1159622463647387722
-2. **Fill out our membership form**: https://forms.cloud.microsoft/r/U26WUVJGgp
-3. **Attend our next meeting**: Check our calendar at https://ccri-cyberknights.github.io/page/#/calendar
+1. **Join our Discord**: [Discord Link]
+2. **Fill out our membership form**: [Web Form Link]
+3. **Attend our next meeting**: Check our calendar at [Meeting Info]
 
 ## Important Links
 
-- **Discord Server**: https://discord.com/channels/1159622463647387719/1159622463647387722
-- **Membership Form**: https://forms.cloud.microsoft/r/U26WUVJGgp
-- **Club Website**: https://www.ccri.edu/comp/cybersecurity/studentclub.html
-- **Meeting Schedule**: https://ccri-cyberknights.github.io/page/#/calendar
+- **Discord Server**: [Discord Link]
+- **Membership Form**: [Web Form Link]
+- **Club Website**: [Website URL]
+- **Meeting Schedule**: [Meeting Info]
 
 ## Questions?
 
@@ -1034,7 +1053,9 @@ The CCRI Cyberknights Leadership Team`
             const messageTemplate = document.getElementById('messageTemplate');
             
             if (templateSelect.value && templates[templateSelect.value]) {
-                messageTemplate.value = templates[templateSelect.value];
+                // Replace placeholders with actual values from clubConfig
+                const templateWithLinks = replaceTemplatePlaceholders(templates[templateSelect.value]);
+                messageTemplate.value = templateWithLinks;
                 currentTemplate = templateSelect.value;
             }
         }

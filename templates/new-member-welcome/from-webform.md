@@ -8,7 +8,7 @@ Welcome to the CCRI Cyberknights! We're excited to have you join our cybersecuri
 
 ## Next Steps
 
-1. **Join our Discord server**: https://discord.com/channels/1159622463647387719/1159622463647387722
+1. **Join our Discord server**: [Discord Link]
    - This is where we coordinate meetings, share resources, and chat about cybersecurity topics
    - Please introduce yourself in the #introductions channel
 
@@ -18,9 +18,9 @@ Welcome to the CCRI Cyberknights! We're excited to have you join our cybersecuri
 
 ## Important Links
 
-- **Discord Server**: https://discord.com/channels/1159622463647387719/1159622463647387722
-- **Club Website**: https://www.ccri.edu/comp/cybersecurity/studentclub.html
-- **Meeting Schedule**: https://ccri-cyberknights.github.io/page/#/calendar
+- **Discord Server**: [Discord Link]
+- **Club Website**: [Website URL]
+- **Meeting Schedule**: [Meeting Info]
 
 If you have any questions, don't hesitate to reach out to any of our officers or post in Discord.
 
@@ -33,5 +33,5 @@ The CCRI Cyberknights Leadership Team
 
 **Template Usage Notes:**
 - Replace `{{name}}` with the new member's name
-- Update Discord link and other URLs as needed
-- Customize meeting schedule information
+- Placeholders like `[Discord Link]`, `[Website URL]`, `[Meeting Info]` are automatically replaced with actual links from the centralized configuration in `index.html`
+- To update links, modify the `clubConfig` object in the JavaScript section of `index.html`
