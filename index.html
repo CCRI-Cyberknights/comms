@@ -1207,6 +1207,8 @@ The CCRI Cyberknights Leadership Team`
         }
 
         function handleInput(rowId, field, value, inputElement) {
+            console.log(`🎯 HANDLE INPUT CALLED - Row: ${rowId}, Field: ${field}, Value: "${value}"`);
+            
             const contact = contacts.find(c => c.id === rowId);
             if (contact) {
                 contact[field] = value;
@@ -1215,7 +1217,10 @@ The CCRI Cyberknights Leadership Team`
             // Handle email auto-completion
             if (field === 'email' && inputElement) {
                 console.log(`🎯 HANDLE INPUT - Email field: "${value}"`);
+                console.log(`🎯 HANDLE INPUT - Input element:`, inputElement);
                 handleEmailInput({ target: inputElement });
+            } else if (field === 'email') {
+                console.log(`❌ HANDLE INPUT - Email field but no input element provided`);
             }
         }
 
