@@ -31,6 +31,22 @@
             margin-bottom: 30px;
         }
 
+        .header-logo {
+            margin-bottom: 20px;
+        }
+
+        .logo-image {
+            max-width: 120px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-image:hover {
+            transform: scale(1.05);
+        }
+
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
@@ -555,6 +571,10 @@
                 font-size: 2rem;
             }
             
+            .logo-image {
+                max-width: 100px;
+            }
+            
             .toolbar {
                 flex-direction: column;
                 align-items: stretch;
@@ -579,6 +599,12 @@
 <body>
     <div class="container">
         <div class="header">
+            <div class="header-logo">
+                <picture>
+                    <source srcset="art-optimized.webp" type="image/webp">
+                    <img src="art-optimized.jpg" alt="CCRI Cyberknights Logo" class="logo-image">
+                </picture>
+            </div>
             <h1>🛡️ CCRI Cyberknights Communications</h1>
             <p>Spreadsheet-style contact management and message generation</p>
         </div>
