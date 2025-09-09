@@ -53,14 +53,18 @@
         /* Email Auto-completion Styles */
         .email-suggestions {
             position: absolute;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
-            max-height: 200px;
+            background: #fff !important;
+            color: #000 !important;
+            border: 1px solid #ccc !important;
+            border-radius: 4px !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+            z-index: 10000 !important;
+            max-height: 150px;
             overflow-y: auto;
             min-width: 200px;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
         .suggestion-item {
@@ -69,10 +73,11 @@
             border-bottom: 1px solid #f1f5f9;
             font-size: 14px;
             transition: background-color 0.2s ease;
+            color: #000 !important;
         }
 
         .suggestion-item:hover {
-            background-color: #f7fafc;
+            background-color: #f0f0f0 !important;
         }
 
         .suggestion-item:last-child {
@@ -80,12 +85,12 @@
         }
 
         .suggestion-typed {
-            color: #2d3748;
+            color: #000 !important;
             font-weight: 500;
         }
 
         .suggestion-remaining {
-            color: #a0aec0;
+            color: #888 !important;
             font-weight: 400;
         }
 
@@ -939,35 +944,19 @@
                 suggestionsBox.appendChild(suggestionItem);
             });
             
-            // Try adding to container first
-            container.appendChild(suggestionsBox);
-            console.log(`✅ Added suggestions box to container`);
-            console.log(`📦 Container now has ${container.children.length} children`);
+            // ALWAYS append to document.body to escape table constraints
+            document.body.appendChild(suggestionsBox);
+            console.log(`✅ Added suggestions box to document.body`);
             
-            // Fallback: If still not visible after 100ms, move to document body
-            setTimeout(() => {
-                const computedStyle = window.getComputedStyle(suggestionsBox);
-                if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden' || computedStyle.opacity === '0') {
-                    console.log(`🔄 Suggestions not visible in container, moving to document body`);
-                    suggestionsBox.remove();
-                    document.body.appendChild(suggestionsBox);
-                    
-                    // Reposition relative to viewport
-                    const rect = input.getBoundingClientRect();
-                    suggestionsBox.style.position = 'fixed';
-                    suggestionsBox.style.top = (rect.bottom + window.scrollY) + 'px';
-                    suggestionsBox.style.left = (rect.left + window.scrollX) + 'px';
-                    suggestionsBox.style.zIndex = '9999';
-                    console.log(`📍 Repositioned to document body at top: ${suggestionsBox.style.top}, left: ${suggestionsBox.style.left}`);
-                }
-            }, 100);
-            
-            // Position the suggestions box
+            // Get accurate position using getBoundingClientRect
             const rect = input.getBoundingClientRect();
-            const containerRect = container.getBoundingClientRect();
-            suggestionsBox.style.top = (rect.bottom - containerRect.top) + 'px';
-            suggestionsBox.style.left = '0px';
-            console.log(`📍 Positioned suggestions at top: ${suggestionsBox.style.top}, left: ${suggestionsBox.style.left}`);
+            suggestionsBox.style.position = 'absolute';
+            suggestionsBox.style.top = (rect.bottom + window.pageYOffset) + 'px';
+            suggestionsBox.style.left = (rect.left + window.pageXOffset) + 'px';
+            suggestionsBox.style.width = rect.width + 'px'; // Match input width
+            suggestionsBox.style.zIndex = '10000';
+            
+            console.log(`📍 Positioned suggestions at top: ${suggestionsBox.style.top}, left: ${suggestionsBox.style.left}, width: ${suggestionsBox.style.width}`);
             
             // Enhanced debugging - comprehensive style analysis
             console.log(`🔍 SUGGESTIONS BOX COMPUTED STYLES:`, {
@@ -1019,9 +1008,21 @@
             suggestionsBox.style.display = 'block !important';
             suggestionsBox.style.visibility = 'visible !important';
             suggestionsBox.style.opacity = '1 !important';
-            suggestionsBox.style.zIndex = '9999 !important';
+            suggestionsBox.style.zIndex = '10000 !important';
             suggestionsBox.style.position = 'absolute !important';
             console.log(`🔧 FORCED VISIBILITY - All styles set with !important`);
+            
+            // Fallback: If still not visible, try position: fixed
+            setTimeout(() => {
+                const computedStyle = window.getComputedStyle(suggestionsBox);
+                if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden' || computedStyle.opacity === '0') {
+                    console.log(`🔄 Suggestions still not visible, trying position: fixed`);
+                    suggestionsBox.style.position = 'fixed';
+                    suggestionsBox.style.top = rect.bottom + 'px';
+                    suggestionsBox.style.left = rect.left + 'px';
+                    console.log(`📍 Switched to fixed positioning at top: ${suggestionsBox.style.top}, left: ${suggestionsBox.style.left}`);
+                }
+            }, 50);
         }
 
         function hideSuggestions() {
@@ -1673,7 +1674,7 @@ The CCRI Cyberknights Leadership Team`
                 <div class="footer-brand">
                     <h3>CCRI Cyberknights</h3>
                 </div>
-                <div class="footer-version">v2.1.4</div>
+                <div class="footer-version">v2.1.5</div>
             </div>
             
             <div class="footer-links">

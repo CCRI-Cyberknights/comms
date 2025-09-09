@@ -1,6 +1,6 @@
 {
   "name": "ccri-cyberknights-comms",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "CCRI Cyberknights Communications - Spreadsheet-style contact management and message generation",
   "main": "index.html",
   "scripts": {
