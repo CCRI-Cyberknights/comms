@@ -16,40 +16,39 @@ We follow the **MAJOR.MINOR.PATCH** format:
 
 ## 🚀 Automated Version Bumping
 
-### Commit Message Analysis
+### Pre-commit Hook System
 
-The system automatically analyzes commit messages to determine the appropriate version bump:
+The system uses a **pre-commit Git hook** that automatically bumps the version on every commit. You can control the bump type by including specific tags in your commit message:
 
 #### Major Version Bump (X.0.0)
 ```bash
 # Triggers major version bump
-git commit -m "BREAKING: remove deprecated API"
-git commit -m "breaking change: database schema update"
+git commit -m "Remove deprecated API [major]"
+git commit -m "Breaking change: database schema update [major]"
 ```
 
 #### Minor Version Bump (0.X.0)
 ```bash
 # Triggers minor version bump
-git commit -m "feat: add new user dashboard"
-git commit -m "feature: implement search functionality"
-git commit -m "new: add authentication system"
+git commit -m "Add new user dashboard [minor]"
+git commit -m "Implement search functionality [minor]"
+git commit -m "New authentication system [minor]"
 ```
 
-#### Patch Version Bump (0.0.X)
+#### Patch Version Bump (0.0.X) - Default
 ```bash
-# Triggers patch version bump
-git commit -m "fix: resolve authentication timeout"
-git commit -m "bugfix: fix memory leak"
-git commit -m "patch: security update"
+# Triggers patch version bump (default behavior)
+git commit -m "Fix authentication timeout [patch]"
+git commit -m "Resolve memory leak [patch]"
+git commit -m "Security update [patch]"
+git commit -m "Any commit without version tag"  # defaults to patch
 ```
 
-#### No Version Bump
-```bash
-# No version bump (documentation, style, etc.)
-git commit -m "docs: update API documentation"
-git commit -m "style: code formatting"
-git commit -m "refactor: improve code structure"
-```
+#### Version Bump Tags
+- `[major]` - Bumps major version (2.0.0 → 3.0.0)
+- `[minor]` - Bumps minor version (2.0.0 → 2.1.0)  
+- `[patch]` - Bumps patch version (2.0.0 → 2.0.1)
+- **No tag** - Defaults to patch version bump
 
 ## 🔧 Manual Version Management
 
@@ -135,79 +134,86 @@ After version bumping, manually update the changelog with actual changes:
 
 ### For New Features
 1. Make your changes
-2. Commit with `feat:` prefix
+2. Commit with `[minor]` tag: `git commit -m "Add new feature [minor]"`
 3. Pre-commit hook automatically bumps minor version
 4. Update changelog with actual changes
 5. Push changes and tag
 
 ### For Bug Fixes
 1. Make your changes
-2. Commit with `fix:` prefix
+2. Commit with `[patch]` tag or no tag: `git commit -m "Fix bug [patch]"` or `git commit -m "Fix bug"`
 3. Pre-commit hook automatically bumps patch version
 4. Update changelog with actual changes
 5. Push changes and tag
 
 ### For Breaking Changes
 1. Make your changes
-2. Commit with `BREAKING:` prefix
+2. Commit with `[major]` tag: `git commit -m "Remove deprecated API [major]"`
 3. Pre-commit hook automatically bumps major version
 4. Update changelog with actual changes
 5. Push changes and tag
+
+### Automatic Behavior
+- **Every commit** automatically bumps the version
+- **Default bump type** is patch (if no tag specified)
+- **Version files** are automatically added to the commit
+- **Changelog** gets a new entry with template
 
 ## 🛠️ Setup Instructions
 
 ### Initial Setup
 
-1. **Install Husky** (if not already installed):
-   ```bash
-   npm install --save-dev husky
-   ```
-
-2. **Initialize Husky**:
-   ```bash
-   npx husky install
-   ```
-
-3. **Add Pre-commit Hook**:
-   ```bash
-   npx husky add .husky/pre-commit "./scripts/bump-version.sh auto"
-   ```
+The pre-commit hook is already set up in this repository. The hook file is located at:
+```
+.git/hooks/pre-commit
+```
 
 ### Team Setup
 
-Each team member should run:
+Each team member should ensure the hook is executable:
 
 ```bash
-# Install dependencies
-npm install
+# Make the pre-commit hook executable
+chmod +x .git/hooks/pre-commit
 
-# Initialize husky
-npx husky install
+# Verify the hook works
+git commit -m "Test commit [patch]"
 ```
+
+### Hook Details
+
+The pre-commit hook:
+- **Automatically runs** on every commit
+- **Bumps version** based on commit message tags
+- **Updates files**: `package.json`, `index.html`, `CHANGELOG.md`
+- **Adds files** to the commit automatically
+- **Defaults to patch** version bump if no tag specified
 
 ## 🎯 Best Practices
 
 ### Commit Message Format
 
-Use conventional commit format:
+Use descriptive commit messages with version bump tags:
 
 ```
-<type>: <description>
+<description> [version_tag]
 
 [optional body]
 
 [optional footer]
 ```
 
-**Types:**
-- `feat`: New feature (minor bump)
-- `fix`: Bug fix (patch bump)
-- `BREAKING`: Breaking change (major bump)
-- `docs`: Documentation changes (no bump)
-- `style`: Code style changes (no bump)
-- `refactor`: Code refactoring (no bump)
-- `test`: Adding tests (no bump)
-- `chore`: Maintenance tasks (no bump)
+**Version Tags:**
+- `[major]`: Breaking changes, incompatible API changes
+- `[minor]`: New features, backwards-compatible functionality  
+- `[patch]`: Bug fixes, backwards-compatible fixes (default)
+- **No tag**: Defaults to patch version bump
+
+**Examples:**
+- `"Add user authentication [minor]"`
+- `"Fix login bug [patch]"`
+- `"Remove deprecated API [major]"`
+- `"Update documentation"` (defaults to patch)
 
 ### Version Bumping Guidelines
 
