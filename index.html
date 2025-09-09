@@ -935,6 +935,29 @@
             suggestionsBox.style.top = (rect.bottom - containerRect.top) + 'px';
             suggestionsBox.style.left = '0px';
             console.log(`📍 Positioned suggestions at top: ${suggestionsBox.style.top}, left: ${suggestionsBox.style.left}`);
+            
+            // Debug visibility
+            console.log(`🔍 Suggestions box computed styles:`, {
+                display: window.getComputedStyle(suggestionsBox).display,
+                visibility: window.getComputedStyle(suggestionsBox).visibility,
+                opacity: window.getComputedStyle(suggestionsBox).opacity,
+                zIndex: window.getComputedStyle(suggestionsBox).zIndex,
+                position: window.getComputedStyle(suggestionsBox).position
+            });
+            
+            // Debug container styles
+            console.log(`🔍 Container computed styles:`, {
+                overflow: window.getComputedStyle(container).overflow,
+                overflowX: window.getComputedStyle(container).overflowX,
+                overflowY: window.getComputedStyle(container).overflowY,
+                position: window.getComputedStyle(container).position
+            });
+            
+            // Force visibility
+            suggestionsBox.style.display = 'block';
+            suggestionsBox.style.visibility = 'visible';
+            suggestionsBox.style.opacity = '1';
+            console.log(`🔧 Forced visibility - display: block, visibility: visible, opacity: 1`);
         }
 
         function hideSuggestions() {

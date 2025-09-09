@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# CCRI Cyberknights Communications - Pre-commit Hook
+# This hook automatically bumps the version based on commit message analysis
+
+echo "🚀 Analyzing commit for version bump..."
+
+# Get the commit message
+COMMIT_MSG=$(cat "$1")
+
+# Analyze commit message for version bump type
+if echo "$COMMIT_MSG" | grep -qiE "^(feat|feature|new|add):"; then
+    echo "📈 Minor version bump detected (new feature)"
+    ./scripts/bump-version.sh minor
+elif echo "$COMMIT_MSG" | grep -qiE "^(fix|bugfix|patch):"; then
+    echo "🔧 Patch version bump detected (bug fix)"
+    ./scripts/bump-version.sh patch
+elif echo "$COMMIT_MSG" | grep -qiE "^(breaking|BREAKING)"; then
+    echo "💥 Major version bump detected (breaking change)"
+    ./scripts/bump-version.sh major
+else
+    echo "📝 No version bump needed (documentation, style, etc.)"
+fi
+
+# Stage the version changes
+echo "📝 Staging version changes..."
+git add package.json index.html CHANGELOG.md
+
+echo "✅ Pre-commit hook completed"

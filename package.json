@@ -1,0 +1,32 @@
+{
+  "name": "ccri-cyberknights-comms",
+  "version": "2.0.0",
+  "description": "CCRI Cyberknights Communications - Spreadsheet-style contact management and message generation",
+  "main": "index.html",
+  "scripts": {
+    "version:bump": "./scripts/bump-version.sh",
+    "version:show": "node -p \"require('./package.json').version\"",
+    "version:patch": "./scripts/bump-version.sh patch",
+    "version:minor": "./scripts/bump-version.sh minor",
+    "version:major": "./scripts/bump-version.sh major",
+    "serve": "python3 -m http.server 8000",
+    "test": "cd tests && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CCRI-Cyberknights/comms.git"
+  },
+  "keywords": [
+    "communications",
+    "cybersecurity",
+    "club",
+    "contact-management",
+    "message-templates"
+  ],
+  "author": "CCRI Cyberknights",
+  "license": "MIT",
+  "homepage": "https://ccri-cyberknights.github.io/comms/",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

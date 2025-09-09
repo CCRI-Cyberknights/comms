@@ -8,6 +8,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
+- [Add your planned features here]
+
+## [2.0.0] - 2025-09-09
+
+### Added
+- [Add new features here]
+
+### Changed
+- [Add changes here]
+
+### Fixed
+- [Add bug fixes here]
+
+
+### Planned
+- [Add your planned features here]
+
+## [2.0.1] - 2025-09-09
+
+### Added
+- [Add new features here]
+
+### Changed
+- [Add changes here]
+
+### Fixed
+- [Add bug fixes here]
+
+
+### Planned
 - Email integration for direct sending
 - Advanced template features with conditional logic
 - Contact grouping and tagging
