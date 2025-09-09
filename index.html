@@ -91,6 +91,20 @@
 
         .email-input-container {
             position: relative;
+            overflow: visible !important;
+        }
+        
+        /* Fix table cell overflow issues */
+        td {
+            overflow: visible !important;
+        }
+        
+        tr {
+            overflow: visible !important;
+        }
+        
+        table {
+            overflow: visible !important;
         }
 
         .header h1 {
@@ -925,9 +939,28 @@
                 suggestionsBox.appendChild(suggestionItem);
             });
             
+            // Try adding to container first
             container.appendChild(suggestionsBox);
             console.log(`✅ Added suggestions box to container`);
             console.log(`📦 Container now has ${container.children.length} children`);
+            
+            // Fallback: If still not visible after 100ms, move to document body
+            setTimeout(() => {
+                const computedStyle = window.getComputedStyle(suggestionsBox);
+                if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden' || computedStyle.opacity === '0') {
+                    console.log(`🔄 Suggestions not visible in container, moving to document body`);
+                    suggestionsBox.remove();
+                    document.body.appendChild(suggestionsBox);
+                    
+                    // Reposition relative to viewport
+                    const rect = input.getBoundingClientRect();
+                    suggestionsBox.style.position = 'fixed';
+                    suggestionsBox.style.top = (rect.bottom + window.scrollY) + 'px';
+                    suggestionsBox.style.left = (rect.left + window.scrollX) + 'px';
+                    suggestionsBox.style.zIndex = '9999';
+                    console.log(`📍 Repositioned to document body at top: ${suggestionsBox.style.top}, left: ${suggestionsBox.style.left}`);
+                }
+            }, 100);
             
             // Position the suggestions box
             const rect = input.getBoundingClientRect();
@@ -936,28 +969,59 @@
             suggestionsBox.style.left = '0px';
             console.log(`📍 Positioned suggestions at top: ${suggestionsBox.style.top}, left: ${suggestionsBox.style.left}`);
             
-            // Debug visibility
-            console.log(`🔍 Suggestions box computed styles:`, {
+            // Enhanced debugging - comprehensive style analysis
+            console.log(`🔍 SUGGESTIONS BOX COMPUTED STYLES:`, {
                 display: window.getComputedStyle(suggestionsBox).display,
                 visibility: window.getComputedStyle(suggestionsBox).visibility,
                 opacity: window.getComputedStyle(suggestionsBox).opacity,
                 zIndex: window.getComputedStyle(suggestionsBox).zIndex,
-                position: window.getComputedStyle(suggestionsBox).position
+                position: window.getComputedStyle(suggestionsBox).position,
+                top: window.getComputedStyle(suggestionsBox).top,
+                left: window.getComputedStyle(suggestionsBox).left,
+                width: window.getComputedStyle(suggestionsBox).width,
+                height: window.getComputedStyle(suggestionsBox).height
             });
             
-            // Debug container styles
-            console.log(`🔍 Container computed styles:`, {
+            // Debug container and parent styles
+            console.log(`🔍 CONTAINER COMPUTED STYLES:`, {
                 overflow: window.getComputedStyle(container).overflow,
                 overflowX: window.getComputedStyle(container).overflowX,
                 overflowY: window.getComputedStyle(container).overflowY,
-                position: window.getComputedStyle(container).position
+                position: window.getComputedStyle(container).position,
+                zIndex: window.getComputedStyle(container).zIndex
             });
             
-            // Force visibility
-            suggestionsBox.style.display = 'block';
-            suggestionsBox.style.visibility = 'visible';
-            suggestionsBox.style.opacity = '1';
-            console.log(`🔧 Forced visibility - display: block, visibility: visible, opacity: 1`);
+            // Debug table cell (td) styles
+            const td = input.closest('td');
+            if (td) {
+                console.log(`🔍 TABLE CELL (TD) COMPUTED STYLES:`, {
+                    overflow: window.getComputedStyle(td).overflow,
+                    overflowX: window.getComputedStyle(td).overflowX,
+                    overflowY: window.getComputedStyle(td).overflowY,
+                    position: window.getComputedStyle(td).position,
+                    zIndex: window.getComputedStyle(td).zIndex
+                });
+            }
+            
+            // Debug table row (tr) styles
+            const tr = input.closest('tr');
+            if (tr) {
+                console.log(`🔍 TABLE ROW (TR) COMPUTED STYLES:`, {
+                    overflow: window.getComputedStyle(tr).overflow,
+                    overflowX: window.getComputedStyle(tr).overflowX,
+                    overflowY: window.getComputedStyle(tr).overflowY,
+                    position: window.getComputedStyle(tr).position,
+                    zIndex: window.getComputedStyle(tr).zIndex
+                });
+            }
+            
+            // Force visibility with maximum specificity
+            suggestionsBox.style.display = 'block !important';
+            suggestionsBox.style.visibility = 'visible !important';
+            suggestionsBox.style.opacity = '1 !important';
+            suggestionsBox.style.zIndex = '9999 !important';
+            suggestionsBox.style.position = 'absolute !important';
+            console.log(`🔧 FORCED VISIBILITY - All styles set with !important`);
         }
 
         function hideSuggestions() {
@@ -1609,7 +1673,7 @@ The CCRI Cyberknights Leadership Team`
                 <div class="footer-brand">
                     <h3>CCRI Cyberknights</h3>
                 </div>
-                <div class="footer-version">v2.1.3</div>
+                <div class="footer-version">v2.1.4</div>
             </div>
             
             <div class="footer-links">
