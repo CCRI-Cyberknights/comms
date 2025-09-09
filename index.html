@@ -225,11 +225,7 @@
             border: 1px solid #e2e8f0;
             border-radius: 8px;
             padding: 20px;
-            margin-bottom: 15px;
-            white-space: pre-wrap;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            line-height: 1.6;
+            margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
@@ -244,9 +240,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .message-recipient {
@@ -268,14 +264,104 @@
             accent-color: #48bb78;
         }
 
-        .message-content {
-            margin-bottom: 15px;
+        .message-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .message-footer {
+        .message-field {
             display: flex;
-            justify-content: flex-end;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field-label {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .field-content {
+            display: flex;
+            align-items: flex-start;
             gap: 10px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 12px;
+            min-height: 40px;
+        }
+
+        .field-text {
+            flex: 1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2d3748;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+        }
+
+        .field-text.subject {
+            font-weight: 600;
+        }
+
+        .field-text.content {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .copy-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        .copy-btn.copied {
+            background: #48bb78;
+        }
+
+        .copy-feedback {
+            position: absolute;
+            background: #48bb78;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            pointer-events: none;
+            z-index: 1000;
+            animation: fadeInOut 1.5s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(-10px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
         }
 
         #messagesContainer {
@@ -313,13 +399,25 @@
         @media (max-width: 768px) {
             .message-preview {
                 padding: 15px;
-                font-size: 12px;
             }
             
             .message-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
+            }
+            
+            .message-fields {
+                gap: 12px;
+            }
+            
+            .field-content {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .copy-btn {
+                align-self: flex-start;
             }
             
             .messages-summary {
@@ -935,10 +1033,15 @@ The CCRI Cyberknights Leadership Team`
                 const messageId = `msg-${contact.id}`;
                 const isSent = sentMessages.has(messageId);
                 
+                // Extract subject from message template
+                const subjectMatch = personalizedMessage.match(/Subject:\s*(.+)/);
+                const subject = subjectMatch ? subjectMatch[1].trim() : 'No Subject';
+                const messageBody = personalizedMessage.replace(/Subject:\s*.+\n\n/, '');
+                
                 return `
                     <div class="message-preview ${isSent ? 'sent' : ''}" id="${messageId}">
                         <div class="message-header">
-                            <div class="message-recipient">To: ${contact.email}</div>
+                            <div class="message-recipient">Message ${index + 1}</div>
                             <div class="message-actions">
                                 <label>
                                     <input type="checkbox" class="message-checkbox" 
@@ -948,11 +1051,28 @@ The CCRI Cyberknights Leadership Team`
                                 </label>
                             </div>
                         </div>
-                        <div class="message-content">
-                            ${personalizedMessage}
-                        </div>
-                        <div class="message-footer">
-                            <button class="btn btn-small" onclick="copyToClipboard('${personalizedMessage.replace(/'/g, "\\'")}')">Copy Message</button>
+                        <div class="message-fields">
+                            <div class="message-field">
+                                <div class="field-label">To:</div>
+                                <div class="field-content">
+                                    <div class="field-text">${contact.email}</div>
+                                    <button class="copy-btn" onclick="copyFieldToClipboard('${contact.email}', this)">Copy</button>
+                                </div>
+                            </div>
+                            <div class="message-field">
+                                <div class="field-label">Subject:</div>
+                                <div class="field-content">
+                                    <div class="field-text subject">${subject}</div>
+                                    <button class="copy-btn" onclick="copyFieldToClipboard('${subject.replace(/'/g, "\\'")}', this)">Copy</button>
+                                </div>
+                            </div>
+                            <div class="message-field">
+                                <div class="field-label">Message Content:</div>
+                                <div class="field-content">
+                                    <div class="field-text content">${messageBody}</div>
+                                    <button class="copy-btn" onclick="copyFieldToClipboard('${messageBody.replace(/'/g, "\\'")}', this)">Copy</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -970,6 +1090,42 @@ The CCRI Cyberknights Leadership Team`
             }).catch(err => {
                 showAlert('Failed to copy message', 'error');
             });
+        }
+
+        function copyFieldToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Visual feedback on the button
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                // Show floating feedback
+                showCopyFeedback(button);
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                showAlert('Failed to copy to clipboard', 'error');
+            });
+        }
+
+        function showCopyFeedback(button) {
+            const feedback = document.createElement('div');
+            feedback.className = 'copy-feedback';
+            feedback.textContent = 'Copied!';
+            
+            const rect = button.getBoundingClientRect();
+            feedback.style.left = (rect.left + rect.width / 2) + 'px';
+            feedback.style.top = (rect.top - 30) + 'px';
+            
+            document.body.appendChild(feedback);
+            
+            setTimeout(() => {
+                document.body.removeChild(feedback);
+            }, 1500);
         }
 
         function clearTemplate() {
