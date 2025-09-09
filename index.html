@@ -32,19 +32,22 @@
         }
 
         .header-logo {
+            margin-top: 30px;
             margin-bottom: 20px;
         }
 
         .logo-image {
-            max-width: 120px;
+            max-width: 200px;
             height: auto;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
+            border-radius: 20px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
         }
 
         .logo-image:hover {
-            transform: scale(1.05);
+            transform: scale(1.08);
+            box-shadow: 0 16px 45px rgba(0,0,0,0.35);
         }
 
         .header h1 {
@@ -571,8 +574,13 @@
                 font-size: 2rem;
             }
             
+            .header-logo {
+                margin-top: 25px;
+                margin-bottom: 15px;
+            }
+            
             .logo-image {
-                max-width: 100px;
+                max-width: 160px;
             }
             
             .toolbar {
@@ -599,14 +607,14 @@
 <body>
     <div class="container">
         <div class="header">
+            <h1>CCRI Cyberknights Communications</h1>
+            <p>Spreadsheet-style contact management and message generation</p>
             <div class="header-logo">
                 <picture>
                     <source srcset="art-optimized.webp" type="image/webp">
                     <img src="art-optimized.jpg" alt="CCRI Cyberknights Logo" class="logo-image">
                 </picture>
             </div>
-            <h1>🛡️ CCRI Cyberknights Communications</h1>
-            <p>Spreadsheet-style contact management and message generation</p>
         </div>
 
         <div id="alert-container"></div>
@@ -977,6 +985,21 @@ The CCRI Cyberknights Leadership Team`
             }
         }
 
+        function clearAllSilently() {
+            // Clear all contacts without confirmation dialog (used for imports)
+            contacts = [];
+            nextRowId = 1;
+            document.getElementById('contactsTableBody').innerHTML = '';
+            addRow(); // Add one empty row
+        }
+
+        function clearAllForImport() {
+            // Clear all contacts for import without adding empty row
+            contacts = [];
+            nextRowId = 1;
+            document.getElementById('contactsTableBody').innerHTML = '';
+        }
+
         function exportData() {
             const validContacts = contacts.filter(contact => contact.name.trim() && contact.email.trim());
             
@@ -1017,8 +1040,21 @@ The CCRI Cyberknights Leadership Team`
                     return;
                 }
                 
-                // Clear existing data
-                clearAll();
+                // Check if there are existing contacts to clear
+                const existingContacts = contacts.filter(contact => contact.name.trim() || contact.email.trim());
+                
+                if (existingContacts.length > 0) {
+                    // Ask for confirmation only if there are actual contacts to clear
+                    if (confirm('This will replace your existing contacts. Are you sure you want to continue?')) {
+                        clearAllForImport();
+                    } else {
+                        showAlert('Import cancelled', 'error');
+                        return;
+                    }
+                } else {
+                    // No existing contacts, clear silently
+                    clearAllForImport();
+                }
                 
                 let importedCount = 0;
                 for (let i = 1; i < lines.length; i++) {
@@ -1036,6 +1072,11 @@ The CCRI Cyberknights Leadership Team`
                             importedCount++;
                         }
                     }
+                }
+                
+                // Add an empty row only if no contacts were imported
+                if (importedCount === 0) {
+                    addRow();
                 }
                 
                 showAlert(`Imported ${importedCount} contacts from CSV`);
@@ -1267,7 +1308,6 @@ The CCRI Cyberknights Leadership Team`
         <div class="footer-content">
             <div class="footer-info">
                 <div class="footer-brand">
-                    <span>🛡️</span>
                     <h3>CCRI Cyberknights</h3>
                 </div>
                 <div class="footer-version">v2.0.0</div>
