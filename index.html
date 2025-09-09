@@ -50,6 +50,49 @@
             box-shadow: 0 16px 45px rgba(0,0,0,0.35);
         }
 
+        /* Email Auto-completion Styles */
+        .email-suggestions {
+            position: absolute;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+            min-width: 200px;
+        }
+
+        .suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f7fafc;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-typed {
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .suggestion-remaining {
+            color: #a0aec0;
+            font-weight: 400;
+        }
+
+        .email-input-container {
+            position: relative;
+        }
+
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
@@ -727,6 +770,15 @@
             meetingFrequency: 'weekly'
         };
 
+        // Email auto-completion configuration
+        const emailDomains = [
+            '@gmail.com',
+            '@my.ccri.edu',
+            '@outlook.com',
+            '@yahoo.com',
+            '@hotmail.com'
+        ];
+
         // Function to replace placeholders in templates with actual values
         function replaceTemplatePlaceholders(template) {
             return template
@@ -735,6 +787,210 @@
                 .replace(/\[Website URL\]/g, clubConfig.website)
                 .replace(/\[Meeting Info\]/g, clubConfig.meetingSchedule)
                 .replace(/\[schedule\]/g, clubConfig.meetingFrequency);
+        }
+
+        // Email auto-completion functions
+        function setupEmailAutoCompletion() {
+            console.log('🚀 SETUP EMAIL AUTO-COMPLETION CALLED!');
+            
+            // Set up auto-completion for existing email inputs
+            setupEmailInputs();
+            
+            // Set up auto-completion for dynamically added email inputs
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        console.log('🔄 DOM mutation detected, re-setting up email inputs');
+                        setupEmailInputs();
+                    }
+                });
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+            
+            console.log('✅ Email auto-completion setup complete');
+        }
+
+        function setupEmailInputs() {
+            const emailInputs = document.querySelectorAll('.email-input');
+            console.log(`🔍 Setting up ${emailInputs.length} email inputs for auto-completion`);
+            
+            if (emailInputs.length === 0) {
+                console.log('❌ NO EMAIL INPUTS FOUND! Checking all inputs...');
+                const allInputs = document.querySelectorAll('input');
+                console.log(`Found ${allInputs.length} total inputs:`, allInputs);
+                allInputs.forEach((input, index) => {
+                    console.log(`Input ${index + 1}: type="${input.type}", class="${input.className}"`);
+                });
+            }
+            
+            emailInputs.forEach((input, index) => {
+                console.log(`📧 Email input ${index + 1}:`, input);
+                if (!input.hasAttribute('data-autocomplete-setup')) {
+                    input.setAttribute('data-autocomplete-setup', 'true');
+                    input.addEventListener('input', handleEmailInput);
+                    input.addEventListener('blur', hideSuggestions);
+                    input.addEventListener('keydown', handleEmailKeydown);
+                    console.log(`✅ Auto-completion setup for input ${index + 1}`);
+                } else {
+                    console.log(`⏭️ Input ${index + 1} already has auto-completion setup`);
+                }
+            });
+        }
+
+        function handleEmailInput(event) {
+            const input = event.target;
+            const value = input.value;
+            
+            console.log(`🎯 EMAIL INPUT EVENT: "${value}"`);
+            console.log(`📧 Input element:`, input);
+            
+            // Check if user is typing after @ symbol
+            const atIndex = value.lastIndexOf('@');
+            if (atIndex === -1) {
+                console.log('❌ No @ symbol found, hiding suggestions');
+                hideSuggestions();
+                return;
+            }
+            
+            const domainPart = value.substring(atIndex);
+            console.log(`🎯 Domain part: "${domainPart}"`);
+            
+            if (domainPart.length < 2) {
+                console.log('Domain part too short, hiding suggestions');
+                hideSuggestions();
+                return;
+            }
+            
+            // Find matching domains
+            const matches = emailDomains.filter(domain => 
+                domain.toLowerCase().startsWith(domainPart.toLowerCase())
+            );
+            
+            console.log(`Found ${matches.length} matches:`, matches);
+            
+            if (matches.length > 0) {
+                showSuggestions(input, matches, domainPart);
+            } else {
+                hideSuggestions();
+            }
+        }
+
+        function showSuggestions(input, matches, typedPart) {
+            console.log(`🎨 SHOWING SUGGESTIONS for "${typedPart}":`, matches);
+            console.log(`📧 Input element:`, input);
+            
+            // Remove existing suggestions
+            hideSuggestions();
+            
+            const container = input.closest('.email-input-container');
+            console.log(`📦 Container found:`, container);
+            
+            if (!container) {
+                console.log('❌ No container found for suggestions!');
+                return;
+            }
+            
+            const suggestionsBox = document.createElement('div');
+            suggestionsBox.className = 'email-suggestions';
+            suggestionsBox.id = 'email-suggestions';
+            console.log(`📝 Created suggestions box:`, suggestionsBox);
+            
+            matches.forEach(domain => {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.className = 'suggestion-item';
+                
+                const typedSpan = document.createElement('span');
+                typedSpan.className = 'suggestion-typed';
+                typedSpan.textContent = typedPart;
+                
+                const remainingSpan = document.createElement('span');
+                remainingSpan.className = 'suggestion-remaining';
+                remainingSpan.textContent = domain.substring(typedPart.length);
+                
+                suggestionItem.appendChild(typedSpan);
+                suggestionItem.appendChild(remainingSpan);
+                
+                suggestionItem.addEventListener('click', function() {
+                    const atIndex = input.value.lastIndexOf('@');
+                    const beforeAt = input.value.substring(0, atIndex);
+                    input.value = beforeAt + domain;
+                    hideSuggestions();
+                    input.focus();
+                });
+                
+                suggestionsBox.appendChild(suggestionItem);
+            });
+            
+            container.appendChild(suggestionsBox);
+            console.log(`✅ Added suggestions box to container`);
+            console.log(`📦 Container now has ${container.children.length} children`);
+            
+            // Position the suggestions box
+            const rect = input.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            suggestionsBox.style.top = (rect.bottom - containerRect.top) + 'px';
+            suggestionsBox.style.left = '0px';
+            console.log(`📍 Positioned suggestions at top: ${suggestionsBox.style.top}, left: ${suggestionsBox.style.left}`);
+        }
+
+        function hideSuggestions() {
+            const existingSuggestions = document.getElementById('email-suggestions');
+            if (existingSuggestions) {
+                existingSuggestions.remove();
+            }
+        }
+
+        function handleEmailKeydown(event) {
+            const suggestions = document.getElementById('email-suggestions');
+            if (!suggestions) return;
+            
+            const items = suggestions.querySelectorAll('.suggestion-item');
+            if (items.length === 0) return;
+            
+            let currentIndex = -1;
+            items.forEach((item, index) => {
+                if (item.classList.contains('highlighted')) {
+                    currentIndex = index;
+                }
+            });
+            
+            switch (event.key) {
+                case 'ArrowDown':
+                    event.preventDefault();
+                    currentIndex = Math.min(currentIndex + 1, items.length - 1);
+                    highlightSuggestion(items, currentIndex);
+                    break;
+                case 'ArrowUp':
+                    event.preventDefault();
+                    currentIndex = Math.max(currentIndex - 1, 0);
+                    highlightSuggestion(items, currentIndex);
+                    break;
+                case 'Enter':
+                    event.preventDefault();
+                    if (currentIndex >= 0) {
+                        items[currentIndex].click();
+                    }
+                    break;
+                case 'Escape':
+                    hideSuggestions();
+                    break;
+            }
+        }
+
+        function highlightSuggestion(items, index) {
+            items.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('highlighted');
+                    item.style.backgroundColor = '#e2e8f0';
+                } else {
+                    item.classList.remove('highlighted');
+                    item.style.backgroundColor = '';
+                }
+            });
         }
 
         // Page leave warning functionality
@@ -888,12 +1144,13 @@ The CCRI Cyberknights Leadership Team`
                            oninput="handleInput(${rowId}, 'name', this.value)"
                            onkeydown="handleKeyDown(event, ${rowId})">
                 </td>
-                <td>
+                <td class="email-input-container">
                     <input type="email" 
                            placeholder="Enter email..." 
                            value="${email}"
                            oninput="handleInput(${rowId}, 'email', this.value)"
-                           onkeydown="handleKeyDown(event, ${rowId})">
+                           onkeydown="handleKeyDown(event, ${rowId})"
+                           class="email-input">
                 </td>
                 <td class="actions-column">
                     <button class="btn btn-danger btn-small" onclick="removeRow(${rowId})" title="Delete row">×</button>
@@ -1297,6 +1554,9 @@ The CCRI Cyberknights Leadership Team`
             
             // Setup page leave warning
             setupPageLeaveWarning();
+            
+            // Setup email auto-completion
+            setupEmailAutoCompletion();
         }
 
         // Start the application
