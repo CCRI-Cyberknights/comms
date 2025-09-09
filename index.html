@@ -53,11 +53,10 @@
         /* Email Auto-completion Styles - Inline Text Completion */
         .email-input-container {
             position: relative;
-            overflow: visible !important;
         }
         
         .email-input {
-            background: transparent !important;
+            background: transparent;
             position: relative;
             z-index: 2;
         }
@@ -79,18 +78,6 @@
             white-space: pre;
         }
 
-        /* Fix table cell overflow issues */
-        td {
-            overflow: visible !important;
-        }
-        
-        tr {
-            overflow: visible !important;
-        }
-        
-        table {
-            overflow: visible !important;
-        }
 
         .header h1 {
             font-size: 2.5rem;
@@ -790,8 +777,6 @@
 
         // Email auto-completion functions
         function setupEmailAutoCompletion() {
-            console.log('🚀 SETUP EMAIL AUTO-COMPLETION CALLED!');
-            
             // Set up auto-completion for existing email inputs
             setupEmailInputs();
             
@@ -799,7 +784,6 @@
             const observer = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutation) {
                     if (mutation.type === 'childList') {
-                        console.log('🔄 DOM mutation detected, re-setting up email inputs');
                         setupEmailInputs();
                     }
                 });
@@ -809,33 +793,17 @@
                 childList: true,
                 subtree: true
             });
-            
-            console.log('✅ Email auto-completion setup complete');
         }
 
         function setupEmailInputs() {
             const emailInputs = document.querySelectorAll('.email-input');
-            console.log(`🔍 Setting up ${emailInputs.length} email inputs for auto-completion`);
             
-            if (emailInputs.length === 0) {
-                console.log('❌ NO EMAIL INPUTS FOUND! Checking all inputs...');
-                const allInputs = document.querySelectorAll('input');
-                console.log(`Found ${allInputs.length} total inputs:`, allInputs);
-                allInputs.forEach((input, index) => {
-                    console.log(`Input ${index + 1}: type="${input.type}", class="${input.className}"`);
-                });
-            }
-            
-            emailInputs.forEach((input, index) => {
-                console.log(`📧 Email input ${index + 1}:`, input);
+            emailInputs.forEach((input) => {
                 if (!input.hasAttribute('data-autocomplete-setup')) {
                     input.setAttribute('data-autocomplete-setup', 'true');
                     input.addEventListener('input', handleEmailInput);
                     input.addEventListener('blur', hideSuggestions);
                     input.addEventListener('keydown', handleEmailKeydown);
-                    console.log(`✅ Auto-completion setup for input ${index + 1}`);
-                } else {
-                    console.log(`⏭️ Input ${index + 1} already has auto-completion setup`);
                 }
             });
         }
@@ -844,22 +812,16 @@
             const input = event.target;
             const value = input.value;
             
-            console.log(`🎯 EMAIL INPUT EVENT: "${value}"`);
-            console.log(`📧 Input element:`, input);
-            
             // Check if user is typing after @ symbol
             const atIndex = value.lastIndexOf('@');
             if (atIndex === -1) {
-                console.log('❌ No @ symbol found, hiding suggestions');
                 hideSuggestions();
                 return;
             }
             
             const domainPart = value.substring(atIndex);
-            console.log(`🎯 Domain part: "${domainPart}"`);
             
             if (domainPart.length < 2) {
-                console.log('Domain part too short, hiding suggestions');
                 hideSuggestions();
                 return;
             }
@@ -869,8 +831,6 @@
                 domain.toLowerCase().startsWith(domainPart.toLowerCase())
             );
             
-            console.log(`Found ${matches.length} matches:`, matches);
-            
             if (matches.length > 0) {
                 showSuggestions(input, matches, domainPart);
             } else {
@@ -879,22 +839,16 @@
         }
 
         function showSuggestions(input, matches, typedPart) {
-            console.log(`🎨 SHOWING INLINE SUGGESTION for "${typedPart}":`, matches);
-            console.log(`📧 Input element:`, input);
-            
             // Remove existing suggestions
             hideSuggestions();
             
             if (matches.length === 0) {
-                console.log('❌ No matches found');
                 return;
             }
             
             // Get the first (best) match
             const bestMatch = matches[0];
             const remainingText = bestMatch.substring(typedPart.length);
-            
-            console.log(`🎯 Best match: "${bestMatch}", remaining: "${remainingText}"`);
             
             // Create overlay element for the grey suggestion text
             const overlay = document.createElement('input');
@@ -907,7 +861,6 @@
             const container = input.closest('.email-input-container');
             if (container) {
                 container.appendChild(overlay);
-                console.log(`✅ Added suggestion overlay to container`);
                 
                 // Position overlay exactly over the input
                 const inputRect = input.getBoundingClientRect();
@@ -916,19 +869,13 @@
                 overlay.style.left = (inputRect.left - containerRect.left) + 'px';
                 overlay.style.width = inputRect.width + 'px';
                 overlay.style.height = inputRect.height + 'px';
-                
-                console.log(`📍 Positioned overlay at top: ${overlay.style.top}, left: ${overlay.style.left}`);
-            } else {
-                console.log('❌ No container found for overlay');
             }
-            
         }
 
         function hideSuggestions() {
             const existingOverlay = document.getElementById('email-suggestion-overlay');
             if (existingOverlay) {
                 existingOverlay.remove();
-                console.log('👋 Removed suggestion overlay');
             }
         }
 
@@ -1143,9 +1090,6 @@ The CCRI Cyberknights Leadership Team`
         }
 
         function handleInput(rowId, field, value, inputElement) {
-            console.log(`🎯 HANDLE INPUT CALLED - Row: ${rowId}, Field: ${field}, Value: "${value}"`);
-            console.log(`🎯 HANDLE INPUT - Input element:`, inputElement);
-            
             const contact = contacts.find(c => c.id === rowId);
             if (contact) {
                 contact[field] = value;
@@ -1153,17 +1097,12 @@ The CCRI Cyberknights Leadership Team`
             
             // Handle email auto-completion
             if (field === 'email' && inputElement) {
-                console.log(`🎯 HANDLE INPUT - Email field: "${value}"`);
-                console.log(`🎯 HANDLE INPUT - Calling handleEmailInput...`);
                 handleEmailInput({ target: inputElement });
-            } else if (field === 'email') {
-                console.log(`❌ HANDLE INPUT - Email field but no input element provided`);
             }
         }
         
-        // Test if handleInput is accessible globally
+        // Make handleInput globally accessible
         window.handleInput = handleInput;
-        console.log(`🔧 handleInput function made globally accessible`);
 
         function handleKeyDown(event, rowId) {
             // Handle Enter key to move to next field
@@ -1217,13 +1156,6 @@ The CCRI Cyberknights Leadership Team`
             }
         }
 
-        function clearAllSilently() {
-            // Clear all contacts without confirmation dialog (used for imports)
-            contacts = [];
-            nextRowId = 1;
-            document.getElementById('contactsTableBody').innerHTML = '';
-            addRow(); // Add one empty row
-        }
 
         function clearAllForImport() {
             // Clear all contacts for import without adding empty row
@@ -1545,7 +1477,7 @@ The CCRI Cyberknights Leadership Team`
                 <div class="footer-brand">
                     <h3>CCRI Cyberknights</h3>
                 </div>
-                <div class="footer-version">v2.1.6</div>
+                <div class="footer-version">v2.1.7</div>
             </div>
             
             <div class="footer-links">
