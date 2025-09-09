@@ -233,29 +233,6 @@
             overflow-y: auto;
         }
 
-        .stats {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f7fafc;
-            border-radius: 8px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: #718096;
-        }
 
         .hidden {
             display: none;
@@ -401,10 +378,6 @@
                 align-items: stretch;
             }
             
-            .stats {
-                flex-direction: column;
-                gap: 10px;
-            }
 
             .footer-info {
                 flex-direction: column;
@@ -435,20 +408,6 @@
             <div class="card">
                 <h2>📊 Contact Spreadsheet</h2>
                 
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-number" id="totalContacts">0</div>
-                        <div class="stat-label">Total Contacts</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="filledRows">0</div>
-                        <div class="stat-label">Filled Rows</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="emptyRows">1</div>
-                        <div class="stat-label">Empty Rows</div>
-                    </div>
-                </div>
 
                 <div class="toolbar">
                     <button class="btn" onclick="addRow()">Add Row</button>
@@ -639,15 +598,6 @@ The CCRI Cyberknights Leadership Team`
             }, 5000);
         }
 
-        function updateStats() {
-            const totalContacts = contacts.length;
-            const filledRows = contacts.filter(contact => contact.name.trim() && contact.email.trim()).length;
-            const emptyRows = Math.max(1, totalContacts - filledRows + 1);
-            
-            document.getElementById('totalContacts').textContent = totalContacts;
-            document.getElementById('filledRows').textContent = filledRows;
-            document.getElementById('emptyRows').textContent = emptyRows;
-        }
 
         function createRow(rowId, name = '', email = '') {
             const row = document.createElement('tr');
@@ -682,7 +632,6 @@ The CCRI Cyberknights Leadership Team`
             
             // Add to contacts array
             contacts.push({ id: rowId, name, email });
-            updateStats();
             
             // Focus on the name input of the new row
             const nameInput = row.querySelector('input[type="text"]');
@@ -698,7 +647,6 @@ The CCRI Cyberknights Leadership Team`
             
             // Remove from contacts array
             contacts = contacts.filter(contact => contact.id !== rowId);
-            updateStats();
         }
 
         function handleInput(rowId, field, value) {
@@ -706,18 +654,6 @@ The CCRI Cyberknights Leadership Team`
             if (contact) {
                 contact[field] = value;
             }
-            
-            // Check if this is the last row and user is typing
-            const rows = document.querySelectorAll('#contactsTableBody tr');
-            const lastRow = rows[rows.length - 1];
-            const currentRow = document.getElementById(`row-${rowId}`);
-            
-            if (currentRow === lastRow && value.trim()) {
-                // Add a new empty row
-                addRow();
-            }
-            
-            updateStats();
         }
 
         function handleKeyDown(event, rowId) {
@@ -732,8 +668,23 @@ The CCRI Cyberknights Leadership Team`
                 if (currentIndex < inputs.length - 1) {
                     inputs[currentIndex + 1].focus();
                 } else {
-                    // If we're on the last input of the row, add a new row and focus on its first input
-                    addRow();
+                    // If we're on the last input of the row, check if we're in the last row
+                    const rows = document.querySelectorAll('#contactsTableBody tr');
+                    const lastRow = rows[rows.length - 1];
+                    
+                    if (row === lastRow) {
+                        // Add a new row and focus on its first input
+                        addRow();
+                    } else {
+                        // Move to the next row's first input
+                        const nextRow = rows[Array.from(rows).indexOf(row) + 1];
+                        if (nextRow) {
+                            const nextInput = nextRow.querySelector('input[type="text"]');
+                            if (nextInput) {
+                                nextInput.focus();
+                            }
+                        }
+                    }
                 }
             }
             
@@ -753,7 +704,6 @@ The CCRI Cyberknights Leadership Team`
                 nextRowId = 1;
                 document.getElementById('contactsTableBody').innerHTML = '';
                 addRow(); // Add one empty row
-                updateStats();
                 showAlert('All contacts cleared');
             }
         }
@@ -926,7 +876,6 @@ The CCRI Cyberknights Leadership Team`
                     addRow();
                 }
                 
-                updateStats();
                 showAlert('Data loaded from browser storage');
             } catch (error) {
                 showAlert('Error loading saved data', 'error');
