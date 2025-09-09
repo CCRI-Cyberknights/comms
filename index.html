@@ -1141,14 +1141,14 @@ The CCRI Cyberknights Leadership Team`
                     <input type="text" 
                            placeholder="Enter name..." 
                            value="${name}"
-                           oninput="handleInput(${rowId}, 'name', this.value)"
+                           oninput="handleInput(${rowId}, 'name', this.value, this)"
                            onkeydown="handleKeyDown(event, ${rowId})">
                 </td>
                 <td class="email-input-container">
                     <input type="email" 
                            placeholder="Enter email..." 
                            value="${email}"
-                           oninput="handleInput(${rowId}, 'email', this.value)"
+                           oninput="handleInput(${rowId}, 'email', this.value, this)"
                            onkeydown="handleKeyDown(event, ${rowId})"
                            class="email-input">
                 </td>
@@ -1183,10 +1183,16 @@ The CCRI Cyberknights Leadership Team`
             contacts = contacts.filter(contact => contact.id !== rowId);
         }
 
-        function handleInput(rowId, field, value) {
+        function handleInput(rowId, field, value, inputElement) {
             const contact = contacts.find(c => c.id === rowId);
             if (contact) {
                 contact[field] = value;
+            }
+            
+            // Handle email auto-completion
+            if (field === 'email' && inputElement) {
+                console.log(`🎯 HANDLE INPUT - Email field: "${value}"`);
+                handleEmailInput({ target: inputElement });
             }
         }
 
