@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCRI Cyberknights Communications</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #718096;
+        }
+
+        .btn-success {
+            background: #48bb78;
+        }
+
+        .contacts-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .contact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background-color: #f7fafc;
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .contact-email {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .template-preview {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .file-upload {
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+        }
+
+        .file-upload.dragover {
+            border-color: #667eea;
+            background-color: #f7fafc;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background-color: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .alert-error {
+            background-color: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #feb2b2;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ CCRI Cyberknights Communications</h1>
+            <p>Streamline your club outreach and member onboarding</p>
+        </div>
+
+        <div id="alert-container"></div>
+
+        <div class="main-content">
+            <!-- Contact Management -->
+            <div class="card">
+                <h2>📋 Contact Management</h2>
+                
+                <div class="form-group">
+                    <label for="contactName">Name:</label>
+                    <input type="text" id="contactName" placeholder="Enter contact name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactEmail">Email:</label>
+                    <input type="email" id="contactEmail" placeholder="Enter email address">
+                </div>
+                
+                <button class="btn" onclick="addContact()">Add Contact</button>
+                <button class="btn btn-secondary" onclick="downloadTemplate()">Download CSV Template</button>
+                
+                <div class="form-group">
+                    <label for="csvFile">Or upload CSV file:</label>
+                    <div class="file-upload" id="fileUpload" onclick="document.getElementById('csvFile').click()">
+                        <p>Click to upload CSV file or drag and drop</p>
+                        <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="handleCSVUpload(event)">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Contacts List:</label>
+                    <div class="contacts-list" id="contactsList">
+                        <p style="text-align: center; color: #718096; padding: 20px;">No contacts added yet</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Templates -->
+            <div class="card">
+                <h2>✉️ Message Templates</h2>
+                
+                <div class="form-group">
+                    <label for="templateSelect">Select Template:</label>
+                    <select id="templateSelect" onchange="loadTemplate()">
+                        <option value="">Choose a template...</option>
+                        <option value="webform">New Member Welcome (Web Form)</option>
+                        <option value="email-outreach">New Member Welcome (Email Outreach)</option>
+                        <option value="club-fair">Club Fair Follow-up</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="messageTemplate">Message Template:</label>
+                    <textarea id="messageTemplate" rows="8" placeholder="Select a template or write your own message..."></textarea>
+                </div>
+                
+                <button class="btn" onclick="generateMessages()">Generate Messages</button>
+                <button class="btn btn-secondary" onclick="clearAll()">Clear All</button>
+                
+                <div id="generatedMessages" class="hidden">
+                    <h3 style="margin-top: 20px; margin-bottom: 15px;">Generated Messages:</h3>
+                    <div id="messagesContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+            <h2>⚡ Quick Actions</h2>
+            <button class="btn" onclick="exportContacts()">Export Contacts</button>
+            <button class="btn btn-secondary" onclick="importContacts()">Import Contacts</button>
+            <button class="btn btn-success" onclick="openGitHub()">View on GitHub</button>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let contacts = [];
+        let currentTemplate = '';
+
+        // Template definitions
+        const templates = {
+            'webform': `Subject: Welcome to CCRI Cyberknights! 🛡️
+
+Hi {{name}},
+
+Welcome to the CCRI Cyberknights! We're excited to have you join our cybersecurity community.
+
+## Next Steps
+
+1. **Join our Discord server**: [Discord Link]
+   - This is where we coordinate meetings, share resources, and chat about cybersecurity topics
+   - Please introduce yourself in the #introductions channel
+
+2. **Check out our upcoming events**: We'll be posting meeting times and special events in Discord
+
+3. **Get involved**: Feel free to ask questions, share interesting articles, or suggest topics for future meetings
+
+## Important Links
+
+- **Discord Server**: [Discord Link]
+- **Club Website**: [Website URL]
+- **Meeting Schedule**: [Meeting Info]
+
+If you have any questions, don't hesitate to reach out to any of our officers or post in Discord.
+
+Looking forward to seeing you at our next meeting!
+
+Best regards,
+The CCRI Cyberknights Leadership Team`,
+
+            'email-outreach': `Subject: Welcome to CCRI Cyberknights! 🛡️
+
+Hi {{name}},
+
+Thank you for your interest in the CCRI Cyberknights! We're excited to have you join our cybersecurity community.
+
+## Getting Started
+
+Since you provided your email directly, here are two ways to get involved:
+
+### Option 1: Join our Discord (Recommended)
+- **Discord Server**: [Discord Link]
+- This is our primary communication hub for meetings, resources, and discussions
+- Please introduce yourself in the #introductions channel
+
+### Option 2: Fill out our official membership form
+- **Web Form**: [Web Form Link]
+- This helps us keep track of all members and send important updates
+
+## What to Expect
+
+- **Regular meetings**: We meet [schedule] to discuss cybersecurity topics, practice skills, and plan activities
+- **Hands-on learning**: CTF competitions, workshops, and guest speakers
+- **Networking**: Connect with fellow cybersecurity enthusiasts and industry professionals
+- **Resources**: Access to study materials, tools, and career guidance
+
+## Important Links
+
+- **Discord Server**: [Discord Link]
+- **Membership Form**: [Web Form Link]
+- **Club Website**: [Website URL]
+- **Meeting Schedule**: [Meeting Info]
+
+## Questions?
+
+Feel free to reach out to any of our officers or post in Discord. We're here to help you get the most out of your Cyberknights experience!
+
+Welcome aboard!
+
+Best regards,
+The CCRI Cyberknights Leadership Team`,
+
+            'club-fair': `Subject: Thanks for your interest in CCRI Cyberknights! 🛡️
+
+Hi {{name}},
+
+Thank you for stopping by our table at the club fair! We're excited about your interest in the CCRI Cyberknights cybersecurity club.
+
+## What We're About
+
+The CCRI Cyberknights is a student organization focused on cybersecurity education, hands-on learning, and professional development. We offer:
+
+- **CTF Competitions**: Test your skills in Capture The Flag challenges
+- **Workshops**: Learn about ethical hacking, network security, and more
+- **Guest Speakers**: Industry professionals share insights and career advice
+- **Networking**: Connect with fellow cybersecurity enthusiasts
+
+## Get Involved
+
+1. **Join our Discord**: [Discord Link]
+2. **Fill out our membership form**: [Web Form Link]
+3. **Attend our next meeting**: [Meeting Info]
+
+## Questions?
+
+Feel free to reach out if you have any questions about the club or cybersecurity in general. We'd love to hear from you!
+
+Best regards,
+The CCRI Cyberknights Leadership Team`
+        };
+
+        // Utility functions
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertContainer.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function addContact() {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            
+            if (!name || !email) {
+                showAlert('Please fill in both name and email fields', 'error');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showAlert('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            const contact = { name, email, id: Date.now() };
+            contacts.push(contact);
+            
+            document.getElementById('contactName').value = '';
+            document.getElementById('contactEmail').value = '';
+            
+            updateContactsList();
+            showAlert('Contact added successfully!');
+        }
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function updateContactsList() {
+            const contactsList = document.getElementById('contactsList');
+            
+            if (contacts.length === 0) {
+                contactsList.innerHTML = '<p style="text-align: center; color: #718096; padding: 20px;">No contacts added yet</p>';
+                return;
+            }
+            
+            contactsList.innerHTML = contacts.map(contact => `
+                <div class="contact-item">
+                    <div class="contact-info">
+                        <div class="contact-name">${contact.name}</div>
+                        <div class="contact-email">${contact.email}</div>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="btn btn-small" onclick="removeContact(${contact.id})">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeContact(id) {
+            contacts = contacts.filter(contact => contact.id !== id);
+            updateContactsList();
+            showAlert('Contact removed');
+        }
+
+        function loadTemplate() {
+            const templateSelect = document.getElementById('templateSelect');
+            const messageTemplate = document.getElementById('messageTemplate');
+            
+            if (templateSelect.value && templates[templateSelect.value]) {
+                messageTemplate.value = templates[templateSelect.value];
+                currentTemplate = templateSelect.value;
+            }
+        }
+
+        function generateMessages() {
+            const messageTemplate = document.getElementById('messageTemplate').value;
+            
+            if (!messageTemplate.trim()) {
+                showAlert('Please enter a message template', 'error');
+                return;
+            }
+            
+            if (contacts.length === 0) {
+                showAlert('Please add at least one contact', 'error');
+                return;
+            }
+            
+            const messagesContainer = document.getElementById('messagesContainer');
+            const generatedMessages = document.getElementById('generatedMessages');
+            
+            messagesContainer.innerHTML = contacts.map(contact => {
+                const personalizedMessage = messageTemplate.replace(/\{\{name\}\}/g, contact.name);
+                return `
+                    <div class="template-preview">
+                        <strong>To: ${contact.email}</strong>
+                        <br><br>
+                        ${personalizedMessage}
+                        <br><br>
+                        <button class="btn btn-small" onclick="copyToClipboard('${personalizedMessage.replace(/'/g, "\\'")}')">Copy Message</button>
+                    </div>
+                `;
+            }).join('');
+            
+            generatedMessages.classList.remove('hidden');
+            showAlert(`Generated ${contacts.length} personalized messages!`);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showAlert('Message copied to clipboard!');
+            }).catch(err => {
+                showAlert('Failed to copy message', 'error');
+            });
+        }
+
+        function clearAll() {
+            contacts = [];
+            document.getElementById('contactName').value = '';
+            document.getElementById('contactEmail').value = '';
+            document.getElementById('messageTemplate').value = '';
+            document.getElementById('templateSelect').value = '';
+            document.getElementById('generatedMessages').classList.add('hidden');
+            updateContactsList();
+            showAlert('All data cleared');
+        }
+
+        function downloadTemplate() {
+            const csvContent = 'Name,Email\nJohn Doe,john.doe@example.com\nJane Smith,jane.smith@example.com';
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'contacts_template.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+            showAlert('CSV template downloaded!');
+        }
+
+        function handleCSVUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const csv = e.target.result;
+                const lines = csv.split('\n');
+                const headers = lines[0].split(',');
+                
+                if (headers.length < 2 || !headers[0].toLowerCase().includes('name') || !headers[1].toLowerCase().includes('email')) {
+                    showAlert('Invalid CSV format. Please use the template format.', 'error');
+                    return;
+                }
+                
+                let importedCount = 0;
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    const values = line.split(',');
+                    if (values.length >= 2) {
+                        const name = values[0].trim();
+                        const email = values[1].trim();
+                        
+                        if (name && email && isValidEmail(email)) {
+                            contacts.push({ name, email, id: Date.now() + i });
+                            importedCount++;
+                        }
+                    }
+                }
+                
+                updateContactsList();
+                showAlert(`Imported ${importedCount} contacts from CSV!`);
+            };
+            reader.readAsText(file);
+        }
+
+        function exportContacts() {
+            if (contacts.length === 0) {
+                showAlert('No contacts to export', 'error');
+                return;
+            }
+            
+            const csvContent = 'Name,Email\n' + contacts.map(contact => `${contact.name},${contact.email}`).join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'cyberknights_contacts.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+            showAlert('Contacts exported successfully!');
+        }
+
+        function importContacts() {
+            document.getElementById('csvFile').click();
+        }
+
+        function openGitHub() {
+            window.open('https://github.com/CCRI-Cyberknights/comms', '_blank');
+        }
+
+        // Drag and drop functionality
+        const fileUpload = document.getElementById('fileUpload');
+        
+        fileUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUpload.classList.add('dragover');
+        });
+        
+        fileUpload.addEventListener('dragleave', () => {
+            fileUpload.classList.remove('dragover');
+        });
+        
+        fileUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUpload.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type === 'text/csv') {
+                document.getElementById('csvFile').files = files;
+                handleCSVUpload({ target: { files: files } });
+            } else {
+                showAlert('Please drop a CSV file', 'error');
+            }
+        });
+
+        // Initialize
+        updateContactsList();
+    </script>
+</body>
+</html>
