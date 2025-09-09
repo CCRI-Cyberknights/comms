@@ -573,8 +573,6 @@
         <div class="card">
             <h2>⚡ Quick Actions</h2>
             <div class="toolbar">
-                <button class="btn" onclick="saveToLocalStorage()">Save to Browser</button>
-                <button class="btn btn-secondary" onclick="loadFromLocalStorage()">Load from Browser</button>
                 <button class="btn btn-success" onclick="openGitHub()">View on GitHub</button>
                 <button class="btn btn-secondary" onclick="downloadTemplate()">Download CSV Template</button>
             </div>
@@ -587,6 +585,22 @@
         let nextRowId = 1;
         let currentTemplate = '';
         let sentMessages = new Set(); // Track which messages have been sent
+
+        // Page leave warning functionality
+        function hasUnsavedData() {
+            // Check if there are any contacts with data
+            return contacts.some(contact => contact.name.trim() || contact.email.trim());
+        }
+
+        function setupPageLeaveWarning() {
+            window.addEventListener('beforeunload', function(event) {
+                if (hasUnsavedData()) {
+                    const message = 'You have unsaved data. Are you sure you want to leave?';
+                    event.returnValue = message;
+                    return message;
+                }
+            });
+        }
 
         // Template definitions
         const templates = {
@@ -1008,49 +1022,6 @@ The CCRI Cyberknights Leadership Team`
             }
         }
 
-        function saveToLocalStorage() {
-            const data = {
-                contacts: contacts,
-                nextRowId: nextRowId
-            };
-            localStorage.setItem('cyberknights_contacts', JSON.stringify(data));
-            showAlert('Data saved to browser storage');
-        }
-
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('cyberknights_contacts');
-            if (!saved) {
-                showAlert('No saved data found', 'error');
-                return;
-            }
-            
-            try {
-                const data = JSON.parse(saved);
-                
-                // Clear existing data
-                clearAll();
-                
-                // Load saved data
-                contacts = data.contacts || [];
-                nextRowId = data.nextRowId || 1;
-                
-                // Rebuild table
-                document.getElementById('contactsTableBody').innerHTML = '';
-                contacts.forEach(contact => {
-                    const row = createRow(contact.id, contact.name, contact.email);
-                    document.getElementById('contactsTableBody').appendChild(row);
-                });
-                
-                // Add one empty row if needed
-                if (contacts.length === 0) {
-                    addRow();
-                }
-                
-                showAlert('Data loaded from browser storage');
-            } catch (error) {
-                showAlert('Error loading saved data', 'error');
-            }
-        }
 
         function downloadTemplate() {
             const csvContent = 'Name,Email\n"John Doe","john.doe@example.com"\n"Jane Smith","jane.smith@example.com"';
@@ -1073,8 +1044,8 @@ The CCRI Cyberknights Leadership Team`
             // Add initial empty row
             addRow();
             
-            // Try to load from localStorage on startup
-            loadFromLocalStorage();
+            // Setup page leave warning
+            setupPageLeaveWarning();
         }
 
         // Start the application
