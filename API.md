@@ -10,7 +10,7 @@ This document provides technical details about the application's architecture, d
 
 ### Technology Stack
 - **Frontend**: Pure HTML5, CSS3, JavaScript (ES6+)
-- **Storage**: Browser localStorage API
+- **Storage**: In-memory only (no persistent storage)
 - **Deployment**: GitHub Pages (static hosting)
 - **No Dependencies**: Single-file application with no external libraries
 
@@ -40,11 +40,10 @@ index.html (single file containing):
 }
 ```
 
-### Storage Object
+### Message Tracking
 ```javascript
 {
-    contacts: Contact[],    // Array of contact objects
-    nextRowId: number       // Next available row ID
+    sentMessages: Set<string>  // Set of message IDs that have been sent
 }
 ```
 
@@ -55,7 +54,7 @@ index.html (single file containing):
 #### `contacts`
 - **Type**: `Array<Contact>`
 - **Description**: Main data store for all contacts
-- **Usage**: Modified by user interactions, persisted to localStorage
+- **Usage**: Modified by user interactions, stored in memory only
 
 #### `nextRowId`
 - **Type**: `number`
@@ -67,6 +66,11 @@ index.html (single file containing):
 - **Description**: Pre-built message templates
 - **Usage**: Accessed by template selection dropdown
 
+#### `sentMessages`
+- **Type**: `Set<string>`
+- **Description**: Tracks which messages have been marked as sent
+- **Usage**: Used for message tracking and statistics
+
 ### Core Functions
 
 #### `addRow(name, email)`
@@ -75,7 +79,7 @@ index.html (single file containing):
   - `email` (string, optional): Initial email value
 - **Returns**: `void`
 - **Description**: Creates a new contact row and adds it to the table
-- **Usage**: Called when user starts typing in last row or clicks "Add Row"
+- **Usage**: Called when user presses Enter in last row or clicks "Add Row"
 
 #### `removeRow(rowId)`
 - **Parameters**: 
@@ -90,14 +94,8 @@ index.html (single file containing):
   - `field` (string): Field name ('name' or 'email')
   - `value` (string): New field value
 - **Returns**: `void`
-- **Description**: Updates contact data and triggers auto-row addition
+- **Description**: Updates contact data in memory
 - **Usage**: Called on input events in table cells
-
-#### `updateStats()`
-- **Parameters**: None
-- **Returns**: `void`
-- **Description**: Updates the statistics display (total, filled, empty rows)
-- **Usage**: Called after any data modification
 
 ### Data Management Functions
 
@@ -120,18 +118,6 @@ index.html (single file containing):
 - **Description**: Processes uploaded CSV file and imports contacts
 - **Usage**: Called when file is selected for import
 
-#### `saveToLocalStorage()`
-- **Parameters**: None
-- **Returns**: `void`
-- **Description**: Saves current data to browser localStorage
-- **Usage**: Called when user clicks "Save to Browser"
-
-#### `loadFromLocalStorage()`
-- **Parameters**: None
-- **Returns**: `void`
-- **Description**: Loads saved data from browser localStorage
-- **Usage**: Called when user clicks "Load from Browser" or on page load
-
 ### Template Functions
 
 #### `loadTemplate()`
@@ -152,6 +138,41 @@ index.html (single file containing):
 - **Returns**: `void`
 - **Description**: Copies text to system clipboard
 - **Usage**: Called when user clicks "Copy Message"
+
+### Message Tracking Functions
+
+#### `toggleMessageSent(messageId)`
+- **Parameters**: 
+  - `messageId` (string): ID of the message to toggle
+- **Returns**: `void`
+- **Description**: Toggles the sent status of a message
+- **Usage**: Called when user checks/unchecks a message checkbox
+
+#### `updateMessageStats()`
+- **Parameters**: None
+- **Returns**: `void`
+- **Description**: Updates the message statistics display
+- **Usage**: Called after message tracking changes
+
+#### `clearAllSent()`
+- **Parameters**: None
+- **Returns**: `void`
+- **Description**: Clears all sent message checkboxes
+- **Usage**: Called when user clicks "Clear All Sent"
+
+### Page Protection Functions
+
+#### `hasUnsavedData()`
+- **Parameters**: None
+- **Returns**: `boolean`
+- **Description**: Checks if there are any contacts with unsaved data
+- **Usage**: Called by page leave protection system
+
+#### `setupPageLeaveWarning()`
+- **Parameters**: None
+- **Returns**: `void`
+- **Description**: Sets up the beforeunload event listener
+- **Usage**: Called during application initialization
 
 ### Utility Functions
 
@@ -196,6 +217,8 @@ index.html (single file containing):
 - `.btn`: Button components with variants
 - `.form-group`: Form input groups
 - `.alert`: Alert message styling
+- `.message-preview`: Message display styling
+- `.footer`: Footer styling with glassmorphism
 
 ### Responsive Breakpoints
 - **Mobile**: `max-width: 768px`
@@ -204,18 +227,6 @@ index.html (single file containing):
 
 ## 💾 Data Persistence
 
-### localStorage Schema
-```javascript
-// Key: 'cyberknights_contacts'
-{
-    contacts: [
-        { id: 1234567890, name: "John Doe", email: "john@example.com" },
-        { id: 1234567891, name: "Jane Smith", email: "jane@example.com" }
-    ],
-    nextRowId: 1234567892
-}
-```
-
 ### CSV Format
 ```csv
 Name,Email
@@ -223,12 +234,13 @@ Name,Email
 "Jane Smith","jane@example.com"
 ```
 
-## 🔧 Browser APIs Used
+### Memory Storage
+- **Contacts Array**: Stored in `contacts` global variable
+- **Message Tracking**: Stored in `sentMessages` Set
+- **Session Only**: Data is lost on page refresh
+- **No Persistent Storage**: No localStorage or external storage
 
-### localStorage API
-- **Purpose**: Data persistence
-- **Methods**: `setItem()`, `getItem()`, `removeItem()`
-- **Fallback**: CSV export/import
+## 🔧 Browser APIs Used
 
 ### Clipboard API
 - **Purpose**: Copy messages to clipboard
@@ -245,6 +257,11 @@ Name,Email
 - **Events**: `dragover`, `dragleave`, `drop`
 - **Fallback**: Click to upload
 
+### beforeunload API
+- **Purpose**: Page leave protection
+- **Events**: `beforeunload`
+- **Support**: All modern browsers
+
 ## 🧪 Testing
 
 ### Manual Testing Checklist
@@ -253,7 +270,8 @@ Name,Email
 - [ ] Export data
 - [ ] Generate messages
 - [ ] Copy to clipboard
-- [ ] Save/load from localStorage
+- [ ] Track sent messages
+- [ ] Test page leave protection
 - [ ] Delete contacts
 - [ ] Keyboard navigation
 - [ ] Mobile responsiveness
@@ -326,6 +344,20 @@ open http://localhost:8000
 - **Build Process**: Minification and optimization
 - **Testing Framework**: Automated testing suite
 - **TypeScript**: Type safety and better development experience
+
+## 📚 Additional Resources
+
+### Documentation
+- **README.md**: Project overview and setup
+- **USER_GUIDE.md**: Comprehensive usage instructions
+- **CONTRIBUTING.md**: Contribution guidelines
+- **CHANGELOG.md**: Version history
+- **SECURITY.md**: Security policies
+
+### External Links
+- **GitHub Repository**: https://github.com/CCRI-Cyberknights/comms
+- **Live Application**: https://ccri-cyberknights.github.io/comms/
+- **GitHub Issues**: https://github.com/CCRI-Cyberknights/comms/issues
 
 ---
 

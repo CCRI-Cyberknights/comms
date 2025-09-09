@@ -13,17 +13,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contact grouping and tagging
 - Analytics and usage tracking
 - Mobile app version
+- Bulk message operations
+- Template versioning system
+
+## [2.1.0] - 2025-01-09
+
+### Added
+- **Message Tracking System**: Checkbox system for tracking sent messages
+- **One Message Per Row Layout**: Full-width message display for better readability
+- **Progress Statistics**: Real-time display of total, sent, and remaining messages
+- **Visual Feedback**: Sent messages turn green with reduced opacity
+- **Bulk Management**: Clear all sent checkboxes with one click
+- **Page Leave Protection**: Warning system to prevent accidental data loss
+- **Professional Footer**: Added comprehensive footer with navigation links
+- **Message Summary Section**: Dedicated full-width section for generated messages
+- **Enhanced Mobile Responsiveness**: Improved mobile layout and touch interactions
+
+### Changed
+- **Message Display**: Changed from grid layout to single-column for better readability
+- **Generated Messages Section**: Moved to full-width section below main content
+- **Quick Actions**: Simplified to only essential functions (removed browser storage)
+- **Message Structure**: Added header, content, and footer sections to each message
+- **Statistics Display**: Removed contact statistics, added message tracking statistics
+- **Footer Design**: Added glassmorphism effect with navigation links
+
+### Fixed
+- **Input Logic Error**: Fixed cursor jumping between rows when typing
+- **Message Generation**: Improved message generation with better error handling
+- **Mobile Layout**: Enhanced mobile responsiveness for message tracking
+- **Browser Compatibility**: Improved compatibility across different browsers
+- **Data Validation**: Enhanced email validation and input sanitization
+
+### Removed
+- **Browser Storage**: Eliminated save/load to browser functionality
+- **Contact Statistics**: Removed total contacts, filled rows, empty rows counters
+- **Social Media Icons**: Removed GitHub, Discord, and email icons from footer
+- **Automatic Row Creation**: Removed automatic row creation on every keystroke
+
+### Security
+- **Page Leave Protection**: Prevents accidental data loss
+- **Input Sanitization**: Enhanced XSS prevention
+- **Data Privacy**: All data remains local, no external transmission
 
 ## [2.0.0] - 2025-01-09
 
 ### Added
 - Complete redesign with spreadsheet-style interface
 - Interactive HTML table with Excel-like feel
-- Automatic row addition when typing in last row
+- Automatic row addition when pressing Enter in last row
 - Real-time data storage in browser memory
 - Keyboard navigation (Enter to move between fields, Tab navigation)
 - Row deletion with confirmation dialogs
-- Live statistics display (total contacts, filled rows, empty rows)
 - Enhanced CSV import/export with proper quoted value parsing
 - Browser storage persistence (save/load functionality)
 - Improved responsive design for mobile and tablet
@@ -123,6 +163,19 @@ When contributing to the project:
 3. Group changes by type (Added, Changed, Fixed, etc.)
 4. Include links to relevant issues or pull requests
 5. Update version numbers when releasing
+
+## Migration Guide
+
+### From v1.0.0 to v2.0.0
+- **UI Changes**: Complete interface redesign
+- **Data Format**: New data storage format
+- **Features**: New spreadsheet interface and enhanced functionality
+
+### From v2.0.0 to v2.1.0
+- **Message Display**: New full-width message layout
+- **Tracking**: New message tracking system
+- **Storage**: Browser storage functionality removed
+- **Protection**: New page leave protection added
 
 ---
 

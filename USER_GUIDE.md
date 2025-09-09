@@ -7,14 +7,14 @@ A comprehensive guide to using the club communications web application.
 ### First Time Setup
 1. **Open the Application**: Go to https://ccri-cyberknights.github.io/comms/
 2. **Bookmark the Page**: Save it to your bookmarks for easy access
-3. **Allow Browser Storage**: The app will ask to save data locally - click "Allow"
+3. **Allow Notifications**: The app may ask for clipboard permissions - click "Allow"
 
 ### Adding Your First Contact
 1. Click in the "Name" field of the first row
 2. Type the person's name
 3. Press Tab or Enter to move to the "Email" field
 4. Type their email address
-5. A new empty row will automatically appear
+5. Press Enter in the last row to add a new empty row
 
 ## 📊 Using the Spreadsheet
 
@@ -29,7 +29,7 @@ A comprehensive guide to using the club communications web application.
 #### Method 1: Manual Entry (Recommended)
 1. Start typing in any empty row
 2. Fill in both Name and Email fields
-3. A new row automatically appears when you start typing in the last row
+3. Press Enter in the last row to add a new empty row
 
 #### Method 2: CSV Import
 1. Click "Import CSV" button
@@ -56,7 +56,7 @@ A comprehensive guide to using the club communications web application.
 
 #### Adding Multiple Rows
 - Click "Add Row" button to insert a new row anywhere
-- Or start typing in the last row to automatically add one
+- Or press Enter in the last row to automatically add one
 
 ## ✉️ Creating Messages
 
@@ -76,8 +76,8 @@ A comprehensive guide to using the club communications web application.
 
 #### Step 3: Generate Messages
 1. Click "Generate Messages"
-2. Personalized messages will appear for each contact
-3. Click "Copy Message" next to each message
+2. Personalized messages will appear in the full-width section below
+3. Each message displays in its own row for easy reading
 
 ### Creating Custom Templates
 
@@ -93,22 +93,62 @@ A comprehensive guide to using the club communications web application.
 - Add relevant links and contact information
 - Test with a few contacts before sending to everyone
 
-## 💾 Saving and Loading Data
+## ✅ Tracking Sent Messages
 
-### Browser Storage
-- **Save to Browser**: Stores your data locally on your computer
-- **Load from Browser**: Restores previously saved data
-- **Automatic Saving**: Data is saved as you type (no need to manually save)
+### The Message Tracking System
+
+#### How It Works
+1. **Generate Messages**: Create personalized messages for all contacts
+2. **Copy & Send**: Copy each message and send via your email client
+3. **Mark as Sent**: Check the "Sent" checkbox next to each message
+4. **Track Progress**: Watch the statistics update in real-time
+
+#### Visual Feedback
+- **Unsent Messages**: Normal appearance with white background
+- **Sent Messages**: Green background with reduced opacity
+- **Checkboxes**: Green checkboxes that you can toggle on/off
+- **Statistics**: Real-time count of total, sent, and remaining messages
+
+### Using the Tracking Features
+
+#### Marking Messages as Sent
+1. **Copy the Message**: Click "Copy Message" button
+2. **Send via Email**: Paste into your email client and send
+3. **Check the Box**: Click the "Sent" checkbox next to the message
+4. **See Progress**: Watch the message turn green and statistics update
+
+#### Managing Your Progress
+- **View Statistics**: See total, sent, and remaining counts at the top
+- **Reset Progress**: Use "Clear All Sent" to uncheck all messages
+- **Individual Control**: Toggle any checkbox on/off as needed
+- **Session Persistence**: Progress is maintained until you refresh the page
+
+#### Best Practices
+- **Send in Batches**: Process a few messages at a time
+- **Check Frequently**: Mark messages as sent immediately after sending
+- **Use Statistics**: Monitor your progress with the real-time counters
+- **Reset When Needed**: Clear all sent checkboxes for a fresh start
+
+## 💾 Managing Data
 
 ### CSV Export/Import
 - **Export CSV**: Downloads your contact list as a CSV file
 - **Import CSV**: Loads contacts from a CSV file
 - **Template Download**: Gets a properly formatted CSV template
 
-### Data Backup
-- Export your data regularly as CSV files
-- Save important contact lists to your computer
-- Use browser storage for quick access
+### Data Safety Features
+
+#### Page Leave Protection
+- **Automatic Detection**: The app detects when you have unsaved data
+- **Warning Dialog**: Shows confirmation before you leave the page
+- **Smart Detection**: Only warns when you actually have data to lose
+- **User Choice**: You can still leave if you really want to
+
+#### When Protection Triggers
+- **Navigation**: Clicking links or using browser navigation
+- **Refresh**: Pressing F5 or Ctrl+R to refresh the page
+- **Close Tab**: Closing the browser tab or window
+- **Address Bar**: Typing a new URL in the address bar
 
 ## 🎯 Best Practices
 
@@ -116,7 +156,7 @@ A comprehensive guide to using the club communications web application.
 - **Keep Data Clean**: Regularly review and update contact information
 - **Use Consistent Formatting**: Standardize names and email addresses
 - **Remove Inactive Contacts**: Delete contacts who are no longer relevant
-- **Backup Regularly**: Export your data frequently
+- **Export Regularly**: Download your contact list as backup
 
 ### Message Creation
 - **Test Templates**: Try templates with a few contacts first
@@ -124,11 +164,17 @@ A comprehensive guide to using the club communications web application.
 - **Keep Messages Concise**: Avoid overly long messages
 - **Include Clear CTAs**: Tell recipients what to do next
 
-### Workflow Tips
-- **Batch Similar Messages**: Group contacts by message type
-- **Use Descriptive Names**: Make it easy to identify different contact lists
-- **Save Work Frequently**: Use browser storage to avoid losing data
-- **Export Before Major Changes**: Backup before making bulk edits
+### Sending Workflow
+- **Batch Processing**: Send messages in small groups
+- **Track Progress**: Use checkboxes to monitor what you've sent
+- **Copy Before Sending**: Always copy the message before marking as sent
+- **Verify Recipients**: Double-check email addresses before sending
+
+### Data Management
+- **Export Before Changes**: Download CSV before making bulk edits
+- **Use Page Protection**: Let the warning system protect your data
+- **Regular Backups**: Export your contact list frequently
+- **Clean Up**: Remove test contacts and old data regularly
 
 ## 🔧 Troubleshooting
 
@@ -139,25 +185,25 @@ A comprehensive guide to using the club communications web application.
 - **Solution**: Make sure your CSV has "Name" and "Email" headers
 - **Check**: Ensure email addresses are valid
 
-#### Browser Storage Issues
-- **Issue**: Data not saving or loading
-- **Solution**: Clear browser cache and cookies
-- **Alternative**: Use CSV export/import instead
+#### Message Generation Issues
+- **Issue**: No messages generated
+- **Solution**: Make sure you have contacts with both name and email
+- **Check**: Verify your template has content
 
-#### Mobile Problems
-- **Issue**: Interface not working on mobile
-- **Solution**: Try refreshing the page or using a different browser
-- **Tip**: Use landscape mode for better experience
-
-#### Copy to Clipboard Not Working
-- **Issue**: Can't copy messages
+#### Checkbox Not Working
+- **Issue**: Can't check/uncheck sent boxes
 - **Solution**: Make sure you're using a modern browser
-- **Alternative**: Select and copy text manually
+- **Alternative**: Try refreshing the page
+
+#### Page Leave Warning Not Appearing
+- **Issue**: No warning when leaving with data
+- **Solution**: Make sure you have actual data in name or email fields
+- **Check**: Try typing something and then leaving
 
 ### Getting Help
 - **Check This Guide**: Look for solutions in this document
 - **Try Different Browser**: Test in Chrome, Firefox, or Safari
-- **Clear Browser Data**: Clear cache and cookies
+- **Clear Browser Data**: Clear cache and cookies if needed
 - **Contact Support**: Reach out to club officers for help
 
 ## 📱 Mobile Usage
@@ -165,7 +211,7 @@ A comprehensive guide to using the club communications web application.
 ### Mobile Tips
 - **Use Landscape Mode**: Better for viewing the spreadsheet
 - **Pinch to Zoom**: Zoom in for easier text entry
-- **Save Frequently**: Mobile browsers may clear data more often
+- **Touch Navigation**: Tap to focus on fields
 - **Use External Keyboard**: For easier data entry
 
 ### Mobile Limitations
@@ -192,8 +238,9 @@ A comprehensive guide to using the club communications web application.
 - **Ctrl+A**: Select all text in current field
 - **Ctrl+C**: Copy selected text
 - **Ctrl+V**: Paste text
-- **Ctrl+Z**: Undo (in supported browsers)
 - **F5**: Refresh page (will lose unsaved data)
+- **Tab**: Move to next field
+- **Enter**: Move to next field or add new row
 
 ### Browser Features
 - **Bookmarks**: Save the application to your bookmarks

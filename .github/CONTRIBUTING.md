@@ -162,7 +162,7 @@ Before submitting changes, test:
 
 - **All Browsers**: Chrome, Firefox, Safari, Edge
 - **Mobile Devices**: iOS and Android
-- **All Features**: Contact management, templates, import/export
+- **All Features**: Contact management, templates, import/export, message tracking
 - **Edge Cases**: Empty data, large datasets, special characters
 
 ### Testing Checklist
@@ -172,7 +172,8 @@ Before submitting changes, test:
 - [ ] Export data
 - [ ] Generate messages with templates
 - [ ] Copy messages to clipboard
-- [ ] Save/load from browser storage
+- [ ] Track sent messages with checkboxes
+- [ ] Test page leave protection
 - [ ] Delete contacts and rows
 - [ ] Keyboard navigation
 - [ ] Mobile responsiveness
@@ -242,6 +243,15 @@ Use the provided pull request template and fill out:
 - **Accessibility**: Make the tool usable by everyone
 - **Maintainability**: Keep the code clean and well-documented
 
+### Current Features
+
+- **Spreadsheet Interface**: Excel-like contact management
+- **Message Templates**: Pre-built and custom message generation
+- **Message Tracking**: Checkbox system for tracking sent messages
+- **Data Management**: CSV import/export functionality
+- **Page Protection**: Warning system for unsaved data
+- **Responsive Design**: Mobile and desktop compatibility
+
 ### Future Roadmap
 
 - **Email Integration**: Direct email sending capabilities
@@ -271,6 +281,39 @@ Contributors will be recognized in:
 - **README**: Listed in the acknowledgments section
 - **Release Notes**: Mentioned in version updates
 - **Club Meetings**: Acknowledged during club activities
+
+## 🔧 Development Environment
+
+### Local Setup
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/CCRI-Cyberknights/comms.git
+   cd comms
+   ```
+
+2. **Serve Locally**:
+   ```bash
+   python3 -m http.server 8000
+   # or
+   npx serve .
+   ```
+
+3. **Open in Browser**: Navigate to `http://localhost:8000`
+
+### Development Tools
+
+- **Code Editor**: VS Code, Sublime Text, or any modern editor
+- **Browser DevTools**: For debugging and testing
+- **Git**: For version control
+- **GitHub CLI**: For managing issues and PRs
+
+### Testing Tools
+
+- **Browser Testing**: Chrome, Firefox, Safari, Edge
+- **Mobile Testing**: iOS Safari, Chrome Mobile
+- **Accessibility Testing**: Screen readers, keyboard navigation
+- **Performance Testing**: Lighthouse, browser dev tools
 
 Thank you for contributing to the CCRI Cyberknights Communications project! Your efforts help make our club more organized and professional.
 
