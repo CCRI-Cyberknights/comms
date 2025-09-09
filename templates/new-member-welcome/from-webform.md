@@ -8,7 +8,7 @@ Welcome to the CCRI Cyberknights! We're excited to have you join our cybersecuri
 
 ## Next Steps
 
-1. **Join our Discord server**: [Discord Link]
+1. **Join our Discord server**: https://discord.com/channels/1159622463647387719/1159622463647387722
    - This is where we coordinate meetings, share resources, and chat about cybersecurity topics
    - Please introduce yourself in the #introductions channel
 
@@ -18,9 +18,9 @@ Welcome to the CCRI Cyberknights! We're excited to have you join our cybersecuri
 
 ## Important Links
 
-- **Discord Server**: [Discord Link]
-- **Club Website**: [Website URL]
-- **Meeting Schedule**: [Meeting Info]
+- **Discord Server**: https://discord.com/channels/1159622463647387719/1159622463647387722
+- **Club Website**: https://www.ccri.edu/comp/cybersecurity/studentclub.html
+- **Meeting Schedule**: https://ccri-cyberknights.github.io/page/#/calendar
 
 If you have any questions, don't hesitate to reach out to any of our officers or post in Discord.
 

@@ -11,27 +11,27 @@ Thank you for your interest in the CCRI Cyberknights! We're excited to have you 
 Since you provided your email directly, here are two ways to get involved:
 
 ### Option 1: Join our Discord (Recommended)
-- **Discord Server**: [Discord Link]
+- **Discord Server**: https://discord.com/channels/1159622463647387719/1159622463647387722
 - This is our primary communication hub for meetings, resources, and discussions
 - Please introduce yourself in the #introductions channel
 
 ### Option 2: Fill out our official membership form
-- **Web Form**: [Web Form Link]
+- **Web Form**: https://forms.cloud.microsoft/r/U26WUVJGgp
 - This helps us keep track of all members and send important updates
 
 ## What to Expect
 
-- **Regular meetings**: We meet [schedule] to discuss cybersecurity topics, practice skills, and plan activities
+- **Regular meetings**: We meet weekly to discuss cybersecurity topics, practice skills, and plan activities
 - **Hands-on learning**: CTF competitions, workshops, and guest speakers
 - **Networking**: Connect with fellow cybersecurity enthusiasts and industry professionals
 - **Resources**: Access to study materials, tools, and career guidance
 
 ## Important Links
 
-- **Discord Server**: [Discord Link]
-- **Membership Form**: [Web Form Link]
-- **Club Website**: [Website URL]
-- **Meeting Schedule**: [Meeting Info]
+- **Discord Server**: https://discord.com/channels/1159622463647387719/1159622463647387722
+- **Membership Form**: https://forms.cloud.microsoft/r/U26WUVJGgp
+- **Club Website**: https://www.ccri.edu/comp/cybersecurity/studentclub.html
+- **Meeting Schedule**: https://ccri-cyberknights.github.io/page/#/calendar
 
 ## Questions?
 
