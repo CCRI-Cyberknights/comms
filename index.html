@@ -78,6 +78,45 @@
             white-space: pre;
         }
 
+        /* Copy completion feedback styles */
+        .copy-completed {
+            background-color: #d4edda !important;
+            border-color: #c3e6cb !important;
+            color: #155724 !important;
+            transition: all 0.3s ease;
+        }
+
+        .message-completed {
+            background-color: #d4edda !important;
+            border: 2px solid #28a745 !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sent-checkbox {
+            transition: all 0.3s ease;
+        }
+
+        .sent-checkbox.checked {
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+        }
+
+        .sent-checkbox.checked::after {
+            content: "✓";
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .field-text.content.copy-completed {
+            background-color: #d4edda !important;
+            border: 2px solid #c3e6cb !important;
+            color: #155724 !important;
+            padding: 8px !important;
+            border-radius: 4px !important;
+        }
+
 
         .header h1 {
             font-size: 2.5rem;
@@ -1329,7 +1368,7 @@ The CCRI Cyberknights Leadership Team`
                                 <div class="field-label">Message Content:</div>
                                 <div class="field-content">
                                     <div class="field-text content">${messageBody}</div>
-                                    <button class="copy-btn" onclick="copyFieldToClipboard('${messageBody.replace(/'/g, "\\'")}', this)">Copy</button>
+                                    <button class="copy-btn" data-copy-text="${messageBody.replace(/"/g, '&quot;').replace(/'/g, '&#39;')}" onclick="copyFieldToClipboardFromData(this)">Copy</button>
                                 </div>
                             </div>
                         </div>
@@ -1358,6 +1397,17 @@ The CCRI Cyberknights Leadership Team`
                 button.textContent = 'Copied!';
                 button.classList.add('copied');
                 
+                // Mark the field as completed
+                const fieldContent = button.closest('.field-content');
+                const fieldText = fieldContent.querySelector('.field-text');
+                fieldContent.classList.add('copy-completed');
+                if (fieldText) {
+                    fieldText.classList.add('copy-completed');
+                }
+                
+                // Check if all fields are completed
+                checkMessageCompletion(fieldContent);
+                
                 // Show floating feedback
                 showCopyFeedback(button);
                 
@@ -1369,6 +1419,35 @@ The CCRI Cyberknights Leadership Team`
             }).catch(err => {
                 showAlert('Failed to copy to clipboard', 'error');
             });
+        }
+
+        function checkMessageCompletion(fieldContent) {
+            const messagePreview = fieldContent.closest('.message-preview');
+            const allFields = messagePreview.querySelectorAll('.field-content');
+            const completedFields = messagePreview.querySelectorAll('.field-content.copy-completed');
+            
+            // Check if all three fields (To, Subject, Message Content) are completed
+            if (completedFields.length === 3) {
+                // Mark the entire message as completed
+                messagePreview.classList.add('message-completed');
+                
+                // Check the sent checkbox
+                const checkbox = messagePreview.querySelector('.message-checkbox');
+                if (checkbox && !checkbox.checked) {
+                    checkbox.checked = true;
+                    checkbox.classList.add('checked');
+                    
+                    // Update the sent messages tracking
+                    const messageId = messagePreview.id;
+                    sentMessages.add(messageId);
+                    updateMessageStats();
+                }
+            }
+        }
+
+        function copyFieldToClipboardFromData(button) {
+            const text = button.getAttribute('data-copy-text');
+            copyFieldToClipboard(text, button);
         }
 
         function showCopyFeedback(button) {
@@ -1403,9 +1482,11 @@ The CCRI Cyberknights Leadership Team`
             if (checkbox.checked) {
                 sentMessages.add(messageId);
                 messageElement.classList.add('sent');
+                checkbox.classList.add('checked');
             } else {
                 sentMessages.delete(messageId);
                 messageElement.classList.remove('sent');
+                checkbox.classList.remove('checked');
             }
             
             updateMessageStats();
@@ -1429,7 +1510,19 @@ The CCRI Cyberknights Leadership Team`
                 document.querySelectorAll('.message-preview').forEach(message => {
                     const checkbox = message.querySelector('.message-checkbox');
                     checkbox.checked = false;
+                    checkbox.classList.remove('checked');
                     message.classList.remove('sent');
+                    message.classList.remove('message-completed');
+                    
+                    // Reset all field completion states
+                    const fieldContents = message.querySelectorAll('.field-content');
+                    fieldContents.forEach(field => {
+                        field.classList.remove('copy-completed');
+                        const fieldText = field.querySelector('.field-text');
+                        if (fieldText) {
+                            fieldText.classList.remove('copy-completed');
+                        }
+                    });
                 });
                 
                 updateMessageStats();
@@ -1477,7 +1570,7 @@ The CCRI Cyberknights Leadership Team`
                 <div class="footer-brand">
                     <h3>CCRI Cyberknights</h3>
                 </div>
-                <div class="footer-version">v2.1.7</div>
+                <div class="footer-version">v2.1.8</div>
             </div>
             
             <div class="footer-links">
