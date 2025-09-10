@@ -261,6 +261,33 @@
             background: #e53e3e;
         }
 
+        .btn-clear {
+            background: #e53e3e;
+            margin-left: auto;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #e74c3c;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            color: #c0392b;
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
         .btn-success {
             background: #48bb78;
         }
@@ -281,6 +308,13 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
             align-items: center;
+            justify-content: space-between;
+        }
+
+        .toolbar-left {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .toolbar .btn {
@@ -720,10 +754,11 @@
                 
 
                 <div class="toolbar">
-                    <button class="btn" onclick="addRow()">Add Row</button>
-                    <button class="btn btn-secondary" onclick="clearAll()">Clear All</button>
-                    <button class="btn btn-success" onclick="exportData()">Export CSV</button>
-                    <button class="btn btn-secondary" onclick="importData()">Import CSV</button>
+                    <div class="toolbar-left">
+                        <button class="btn" onclick="importData()">Import CSV</button>
+                        <button class="btn btn-success" onclick="exportData()">Export CSV</button>
+                    </div>
+                    <button class="btn btn-clear" onclick="clearAll()">Clear All</button>
                     <input type="file" id="fileInput" accept=".csv" style="display: none;" onchange="handleFileImport(event)">
                 </div>
 
@@ -1142,7 +1177,7 @@ The CCRI Cyberknights Leadership Team`
             const row = document.createElement('tr');
             row.id = `row-${rowId}`;
             row.innerHTML = `
-                <td class="row-number">${rowId}</td>
+                <td class="row-number"></td>
                 <td>
                     <input type="text" 
                            placeholder="Enter name..." 
@@ -1159,10 +1194,19 @@ The CCRI Cyberknights Leadership Team`
                            class="email-input">
                 </td>
                 <td class="actions-column">
-                    <button class="btn btn-danger btn-small" onclick="removeRow(${rowId})" title="Delete row">×</button>
+                    <button class="delete-btn" onclick="removeRow(${rowId})" title="Delete row">❌</button>
                 </td>
             `;
             return row;
+        }
+
+        function updateRowNumber(row) {
+            // Find its index among all rows in the tbody
+            const index = Array.from(row.parentNode.children).indexOf(row);
+            const rowNumberCell = row.querySelector('.row-number');
+            if (rowNumberCell) {
+                rowNumberCell.textContent = index + 1;
+            }
         }
 
         function addRow(name = '', email = '') {
@@ -1173,9 +1217,17 @@ The CCRI Cyberknights Leadership Team`
             // Add to contacts array
             contacts.push({ id: rowId, name, email });
             
+            // Update all row numbers
+            updateAllRowNumbers();
+            
             // Focus on the name input of the new row
             const nameInput = row.querySelector('input[type="text"]');
             nameInput.focus();
+        }
+
+        function updateAllRowNumbers() {
+            const rows = document.querySelectorAll('#contactsTableBody tr');
+            rows.forEach(row => updateRowNumber(row));
         }
 
         function removeRow(rowId) {
@@ -1187,6 +1239,9 @@ The CCRI Cyberknights Leadership Team`
             
             // Remove from contacts array
             contacts = contacts.filter(contact => contact.id !== rowId);
+            
+            // Update all row numbers
+            updateAllRowNumbers();
         }
 
         function handleInput(rowId, field, value, inputElement) {
@@ -1648,7 +1703,7 @@ The CCRI Cyberknights Leadership Team`
                 <div class="footer-brand">
                     <h3>CCRI Cyberknights</h3>
                 </div>
-                <div class="footer-version">v2.1.10</div>
+                <div class="footer-version">v2.1.12</div>
             </div>
             
             <div class="footer-links">

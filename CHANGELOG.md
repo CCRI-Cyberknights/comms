@@ -10,6 +10,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Planned
 - [Add your planned features here]
 
+## [2.1.12] - 2025-09-10
+
+### Added
+- [Add new features here]
+
+### Changed
+- [Add changes here]
+
+### Fixed
+- [Add bug fixes here]
+
+
+### Planned
+- [Add your planned features here]
+
+## [2.1.11] - 2025-09-10
+
+### Added
+- [Add new features here]
+
+### Changed
+- [Add changes here]
+
+### Fixed
+- [Add bug fixes here]
+
+
+### Planned
+- [Add your planned features here]
+
 ## [2.1.10] - 2025-09-10
 
 ### Added
