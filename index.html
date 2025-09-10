@@ -814,6 +814,49 @@
                 .replace(/\[schedule\]/g, clubConfig.meetingFrequency);
         }
 
+        function parseName(name) {
+            // Handle names in "Last, First" format
+            if (name.includes(',')) {
+                const parts = name.split(',').map(part => part.trim());
+                if (parts.length >= 2) {
+                    // Extract first name (second part) and last name (first part)
+                    const lastName = parts[0];
+                    const firstName = parts[1];
+                    
+                    // Remove any parenthetical content from first name (like "(cdavis24)")
+                    let cleanFirstName = firstName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+                    
+                    // Remove middle initials (single letters followed by space or end)
+                    cleanFirstName = cleanFirstName.replace(/\s+[A-Z]\s*$/, '').trim();
+                    
+                    // Return in "First Last" format
+                    return `${cleanFirstName} ${lastName}`;
+                }
+            }
+            
+            // Return original name if no comma found or parsing fails
+            return name;
+        }
+
+        // Test the parseName function with examples
+        function testNameParsing() {
+            const testCases = [
+                'Davis, Corey A (cdavis24)', // Should become "Corey Davis"
+                'Smith, John', // Should become "John Smith"
+                'Johnson, Mary Jane', // Should become "Mary Jane Johnson"
+                'Brown, Robert (rbrown123)', // Should become "Robert Brown"
+                'Wilson, Sarah M', // Should become "Sarah Wilson" (middle initial removed)
+                'John Doe', // No comma - should remain unchanged
+                'Jane Smith-Wilson' // No comma - should remain unchanged
+            ];
+            
+            console.log('Testing name parsing:');
+            testCases.forEach(testName => {
+                const parsed = parseName(testName);
+                console.log(`"${testName}" → "${parsed}"`);
+            });
+        }
+
         // Email auto-completion functions
         function setupEmailAutoCompletion() {
             // Set up auto-completion for existing email inputs
@@ -1327,7 +1370,8 @@ The CCRI Cyberknights Leadership Team`
             sentMessages.clear();
             
             messagesContainer.innerHTML = validContacts.map((contact, index) => {
-                const personalizedMessage = messageTemplate.replace(/\{\{name\}\}/g, contact.name);
+                const parsedName = parseName(contact.name);
+                const personalizedMessage = messageTemplate.replace(/\{\{name\}\}/g, parsedName);
                 const messageId = `msg-${contact.id}`;
                 const isSent = sentMessages.has(messageId);
                 
@@ -1570,7 +1614,7 @@ The CCRI Cyberknights Leadership Team`
                 <div class="footer-brand">
                     <h3>CCRI Cyberknights</h3>
                 </div>
-                <div class="footer-version">v2.1.8</div>
+                <div class="footer-version">v2.1.9</div>
             </div>
             
             <div class="footer-links">
