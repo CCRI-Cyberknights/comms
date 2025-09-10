@@ -144,8 +144,8 @@
         }
 
         .main-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 30px;
             margin-bottom: 30px;
         }
@@ -289,8 +289,8 @@
 
         /* Template Panel */
         .template-panel {
-            max-height: 600px;
-            overflow-y: auto;
+            max-height: none;
+            overflow-y: visible;
         }
 
         .form-group {
@@ -306,12 +306,29 @@
 
         .form-group select,
         .form-group textarea {
-            width: 100%;
             padding: 12px;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             font-size: 14px;
             transition: border-color 0.3s ease;
+        }
+
+        .form-group select {
+            width: auto;
+            min-width: 200px;
+            max-width: 100%;
+        }
+
+        .form-group textarea {
+            width: 100%;
+        }
+
+        .form-group textarea {
+            resize: none;
+            overflow: hidden;
+            min-height: 120px;
+            height: auto;
+            box-sizing: border-box;
         }
 
         .form-group select:focus,
@@ -574,11 +591,6 @@
             background-color: #f7fafc;
         }
 
-        @media (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
 
         /* Footer Styles */
         .footer {
@@ -783,14 +795,6 @@
             <div id="messagesContainer"></div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="card">
-            <h2>⚡ Quick Actions</h2>
-            <div class="toolbar">
-                <button class="btn btn-success" onclick="openGitHub()">View on GitHub</button>
-                <button class="btn btn-secondary" onclick="downloadTemplate()">Download CSV Template</button>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -1349,6 +1353,24 @@ The CCRI Cyberknights Leadership Team`
             return emailRegex.test(email);
         }
 
+        function resizeTextarea(textarea) {
+            // Reset height to force reflow
+            textarea.style.height = 'inherit';
+            
+            // Get computed styles for accurate border/padding calculations
+            const computedStyle = window.getComputedStyle(textarea);
+            const borderTop = parseFloat(computedStyle.borderTopWidth) || 0;
+            const borderBottom = parseFloat(computedStyle.borderBottomWidth) || 0;
+            const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+            const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
+            
+            // Calculate total height including borders and padding
+            const totalHeight = borderTop + paddingTop + textarea.scrollHeight + paddingBottom + borderBottom;
+            
+            // Set the new height (CSS min-height will be respected automatically)
+            textarea.style.height = totalHeight + 'px';
+        }
+
         function loadTemplate() {
             const templateSelect = document.getElementById('templateSelect');
             const messageTemplate = document.getElementById('messageTemplate');
@@ -1358,6 +1380,9 @@ The CCRI Cyberknights Leadership Team`
                 const templateWithLinks = replaceTemplatePlaceholders(templates[templateSelect.value]);
                 messageTemplate.value = templateWithLinks;
                 currentTemplate = templateSelect.value;
+                
+                // Resize to fit content after programmatic update
+                resizeTextarea(messageTemplate);
             }
         }
 
@@ -1525,12 +1550,16 @@ The CCRI Cyberknights Leadership Team`
         }
 
         function clearTemplate() {
-            document.getElementById('messageTemplate').value = '';
+            const messageTemplate = document.getElementById('messageTemplate');
+            messageTemplate.value = '';
             document.getElementById('templateSelect').value = '';
             document.getElementById('generatedMessages').classList.add('hidden');
             document.getElementById('messagesContainer').innerHTML = '';
             document.getElementById('messagesSummary').classList.add('hidden');
             sentMessages.clear();
+            
+            // Resize to minimum height after clearing
+            resizeTextarea(messageTemplate);
         }
 
         function toggleMessageSent(messageId) {
@@ -1589,21 +1618,6 @@ The CCRI Cyberknights Leadership Team`
         }
 
 
-        function downloadTemplate() {
-            const csvContent = 'Name,Email\n"John Doe","john.doe@example.com"\n"Jane Smith","jane.smith@example.com"';
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'contacts_template.csv';
-            a.click();
-            window.URL.revokeObjectURL(url);
-            showAlert('CSV template downloaded!');
-        }
-
-        function openGitHub() {
-            window.open('https://github.com/CCRI-Cyberknights/comms', '_blank');
-        }
 
         // Initialize the application
         function init() {
@@ -1615,6 +1629,12 @@ The CCRI Cyberknights Leadership Team`
             
             // Setup email auto-completion
             setupEmailAutoCompletion();
+            
+            // Setup textarea auto-resize
+            const messageTemplate = document.getElementById('messageTemplate');
+            messageTemplate.addEventListener('input', function() {
+                resizeTextarea(this);
+            });
         }
 
         // Start the application
@@ -1628,7 +1648,7 @@ The CCRI Cyberknights Leadership Team`
                 <div class="footer-brand">
                     <h3>CCRI Cyberknights</h3>
                 </div>
-                <div class="footer-version">v2.1.9</div>
+                <div class="footer-version">v2.1.10</div>
             </div>
             
             <div class="footer-links">
