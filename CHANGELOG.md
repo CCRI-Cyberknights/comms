@@ -10,16 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Planned
 - [Add your planned features here]
 
-## [2.1.9] - 2025-09-09
-
-### Added
-- [Add new features here]
-
-### Changed
-- [Add changes here]
+## [2.1.9] - 2025-09-10
 
 ### Fixed
-- [Add bug fixes here]
+- Fixed email autocompletion visibility issue by adding missing CSS overflow rules
+- Email autocompletion overlay was being clipped by table cell boundaries
+- Restored working email autocompletion functionality
 
 
 ### Planned

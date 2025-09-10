@@ -53,10 +53,11 @@
         /* Email Auto-completion Styles - Inline Text Completion */
         .email-input-container {
             position: relative;
+            overflow: visible !important;
         }
         
         .email-input {
-            background: transparent;
+            background: transparent !important;
             position: relative;
             z-index: 2;
         }
@@ -115,6 +116,19 @@
             color: #155724 !important;
             padding: 8px !important;
             border-radius: 4px !important;
+        }
+
+        /* Fix table cell overflow issues for email autocompletion */
+        td {
+            overflow: visible !important;
+        }
+        
+        tr {
+            overflow: visible !important;
+        }
+        
+        table {
+            overflow: visible !important;
         }
 
 
