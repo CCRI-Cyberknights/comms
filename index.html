@@ -953,6 +953,11 @@
             const input = event.target;
             const value = input.value;
             
+            // Skip autocompletion if we're in the middle of accepting a suggestion
+            if (input.hasAttribute('data-accepting-suggestion')) {
+                return;
+            }
+            
             // Check if user is typing after @ symbol
             const atIndex = value.lastIndexOf('@');
             if (atIndex === -1) {
@@ -1030,8 +1035,31 @@
                     event.preventDefault();
                     // Accept the suggestion
                     const input = event.target;
-                    input.value = overlay.value;
+                    const fullEmail = overlay.value;
+                    
+                    // Set flag to prevent autocompletion interference
+                    input.setAttribute('data-accepting-suggestion', 'true');
+                    
+                    // Update the input value
+                    input.value = fullEmail;
+                    
+                    // Update the contact data immediately
+                    const rowId = parseInt(input.closest('tr').id.replace('row-', ''));
+                    const contact = contacts.find(c => c.id === rowId);
+                    if (contact) {
+                        contact.email = fullEmail;
+                    }
+                    
+                    // Hide suggestions
                     hideSuggestions();
+                    
+                    // Clear the flag after a short delay
+                    setTimeout(() => {
+                        input.removeAttribute('data-accepting-suggestion');
+                    }, 100);
+                    
+                    // Trigger input event to ensure UI updates
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
                     break;
                 case 'Escape':
                     hideSuggestions();
@@ -1721,7 +1749,7 @@ The CCRI Cyberknights Leadership Team`
                 <div class="footer-brand">
                     <h3>CCRI Cyberknights</h3>
                 </div>
-                <div class="footer-version">v2.1.15</div>
+                <div class="footer-version">v2.1.16</div>
             </div>
             
             <div class="footer-links">
