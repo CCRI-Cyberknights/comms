@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCRI Cyberknights Communications</title>
+    <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -1181,27 +1182,44 @@ The CCRI Cyberknights Leadership Team`
         function createRow(rowId, name = '', email = '') {
             const row = document.createElement('tr');
             row.id = `row-${rowId}`;
-            row.innerHTML = `
-                <td class="row-number"></td>
-                <td>
-                    <input type="text" 
-                           placeholder="Enter name..." 
-                           value="${name}"
-                           oninput="handleInput(${rowId}, 'name', this.value, this)"
-                           onkeydown="handleKeyDown(event, ${rowId})">
-                </td>
-                <td class="email-input-container">
-                    <input type="email" 
-                           placeholder="Enter email..." 
-                           value="${email}"
-                           oninput="handleInput(${rowId}, 'email', this.value, this)"
-                           onkeydown="handleKeyDown(event, ${rowId})"
-                           class="email-input">
-                </td>
-                <td class="actions-column">
-                    <button class="delete-btn" onclick="removeRow(${rowId})" title="Delete row">❌</button>
-                </td>
-            `;
+
+            const numberCell = document.createElement('td');
+            numberCell.className = 'row-number';
+
+            const nameCell = document.createElement('td');
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.placeholder = 'Enter name...';
+            nameInput.value = name;
+            nameInput.oninput = (e) => handleInput(rowId, 'name', e.target.value, e.target);
+            nameInput.onkeydown = (e) => handleKeyDown(e, rowId);
+            nameCell.appendChild(nameInput);
+
+            const emailCell = document.createElement('td');
+            emailCell.className = 'email-input-container';
+            const emailInput = document.createElement('input');
+            emailInput.type = 'email';
+            emailInput.placeholder = 'Enter email...';
+            emailInput.value = email;
+            emailInput.className = 'email-input';
+            emailInput.oninput = (e) => handleInput(rowId, 'email', e.target.value, e.target);
+            emailInput.onkeydown = (e) => handleKeyDown(e, rowId);
+            emailCell.appendChild(emailInput);
+
+            const actionsCell = document.createElement('td');
+            actionsCell.className = 'actions-column';
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = '❌';
+            deleteBtn.title = 'Delete row';
+            deleteBtn.onclick = () => removeRow(rowId);
+            actionsCell.appendChild(deleteBtn);
+
+            row.appendChild(numberCell);
+            row.appendChild(nameCell);
+            row.appendChild(emailCell);
+            row.appendChild(actionsCell);
+
             return row;
         }
 
@@ -1318,7 +1336,6 @@ The CCRI Cyberknights Leadership Team`
 
 
         function clearAllForImport() {
-            // Clear all contacts for import without adding empty row
             contacts = [];
             nextRowId = 1;
             document.getElementById('contactsTableBody').innerHTML = '';
@@ -1353,59 +1370,55 @@ The CCRI Cyberknights Leadership Team`
         function handleFileImport(event) {
             const file = event.target.files[0];
             if (!file) return;
+
+            // Check if there are existing contacts to clear
+            const existingContacts = contacts.filter(contact => contact.name.trim() || contact.email.trim());
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const csv = e.target.result;
-                const lines = csv.split('\n');
-                
-                if (lines.length < 2) {
-                    showAlert('Invalid CSV file', 'error');
+            if (existingContacts.length > 0) {
+                if (confirm('This will replace your existing contacts. Are you sure you want to continue?')) {
+                    clearAllForImport();
+                } else {
+                    showAlert('Import cancelled', 'error');
                     return;
                 }
-                
-                // Check if there are existing contacts to clear
-                const existingContacts = contacts.filter(contact => contact.name.trim() || contact.email.trim());
-                
-                if (existingContacts.length > 0) {
-                    // Ask for confirmation only if there are actual contacts to clear
-                    if (confirm('This will replace your existing contacts. Are you sure you want to continue?')) {
-                        clearAllForImport();
-                    } else {
-                        showAlert('Import cancelled', 'error');
-                        return;
-                    }
-                } else {
-                    // No existing contacts, clear silently
-                    clearAllForImport();
+            } else {
+                clearAllForImport();
+            }
+
+            Papa.parse(file, {
+                header: true,          // Expect first row as headers
+                skipEmptyLines: true,  // Ignore blank rows
+                encoding: "UTF-8",     // Safer cross-platform parsing
+                complete: function(results) {
+                    processParsedData(results.data);
+                },
+                error: function(err) {
+                    console.error("CSV parse error:", err);
+                    showAlert("Error parsing CSV file", "error");
                 }
-                
-                let importedCount = 0;
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-                    
-                    // Simple CSV parsing (handles quoted values)
-                    const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-                    if (values && values.length >= 2) {
-                        const name = values[0].replace(/"/g, '').trim();
-                        const email = values[1].replace(/"/g, '').trim();
-                        
-                        if (name && email && isValidEmail(email)) {
-                            addRow(name, email);
-                            importedCount++;
-                        }
-                    }
+            });
+        }
+
+        // Process parsed CSV rows
+        function processParsedData(rows) {
+            let importedCount = 0;
+
+            rows.forEach(row => {
+                const name = (row.Name || "").trim();
+                const email = (row.Email || "").trim();
+
+                if (name && email && isValidEmail(email)) {
+                    addRow(name, email);
+                    importedCount++;
                 }
-                
-                // Add an empty row only if no contacts were imported
-                if (importedCount === 0) {
-                    addRow();
-                }
-                
-                showAlert(`Imported ${importedCount} contacts from CSV`);
-            };
-            reader.readAsText(file);
+            });
+
+            if (importedCount === 0) {
+                addRow(); // fallback: at least one empty row
+                showAlert("No valid contacts imported", "error");
+            } else {
+                showAlert(`${importedCount} contacts imported successfully`, "success");
+            }
         }
 
         function isValidEmail(email) {
@@ -1708,7 +1721,7 @@ The CCRI Cyberknights Leadership Team`
                 <div class="footer-brand">
                     <h3>CCRI Cyberknights</h3>
                 </div>
-                <div class="footer-version">v2.1.14</div>
+                <div class="footer-version">v2.1.15</div>
             </div>
             
             <div class="footer-links">
